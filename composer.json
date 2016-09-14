@@ -1,0 +1,8 @@
+{
+	"name": "ben0bienterprises/RUNPIXI",
+	"autoload": {
+		"psr-4": {
+			"" : ""
+		} 
+	}
+}
