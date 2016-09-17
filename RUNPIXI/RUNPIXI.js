@@ -48,7 +48,7 @@ Hierarchy
 
 /*
 	TODO:
-	Scrolling
+	Scrolling...done.
 	Texture Manager
 		Load Texture if not loaded.
 		Else get it from the list.
@@ -66,7 +66,7 @@ var RUNPIXI = function()
 			console.log("ERROR: RUNPIXI.setMainLoopMethod needs a function as parameter.");
 	};
 
-	// SCROLLING STUFF
+	// SCROLLING STUFF...way to much, minimize it.
 	var _actualScrollRate = 0.0;	// this is how much is to be scrolled.
 	var _isScrolling = false;	// is it scrolling?
 	var _ScrollRX = 0; 		// -1, 0, 1 - also if keys are not pressed.
@@ -203,6 +203,8 @@ var RUNPIXI = function()
 	var _PIXIWidth = 0;
 	var _PIXIHeight = 0;
 	
+	// render function.
+	// _MainLoopFunction is "your" function.
 	var _PIXILoopMethod = function()
 	{
 		requestAnimationFrame(_PIXILoopMethod);
@@ -211,6 +213,7 @@ var RUNPIXI = function()
 		_PIXIRenderer.render(_PIXIRootStage);
 	};
 	
+	// Initialize PIXI.
 	var _PIXIInitialize = function(pixicontainerID)
 	{
 		if($(pixicontainerID).length===0)
@@ -240,7 +243,6 @@ var RUNPIXI = function()
 			console.log("PIXI Screen already initialized.");
 		}
 	};
-	
 	this.initialize = function(pixicontainerID) {_PIXIInitialize(pixicontainerID);};
 	
 	// create and return a sprite
@@ -293,7 +295,7 @@ RUNPIXI.ScrollRateStep = 0.5;	// how fast from minimum to maximum scroll speed?
 
 // create sprite with position, rotation, anchor and size.
 RUNPIXI.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex, scaley) {return RUNPIXI.instance.CreateSprite(texture,x,y,rotation,anchorx,anchory, scalex, scaley);};
-// short of createsprite, only with position - anchor is 0.5, scale is 1
+// short of createsprite, only with position - anchor is 0.5, scale is 1, rotation is 0
 RUNPIXI.Sprite = function(texture, x, y) {return RUNPIXI.instance.CreateSprite(texture, x, y,0,0.5,0.5,1,1);};
 
 // shorts to the stages.
@@ -312,4 +314,7 @@ RUNPIXI.initialize = function(pixicontainerID, mainLoopFunction)
 	RUNPIXI.instance.initialize(pixicontainerID);
 	RUNPIXI.instance.setMainLoopFunction(mainLoopFunction);
 };
+
+// Helper to create a pixelart screen.
+RUNPIXI.PIXELATED = function() {PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;};
 
