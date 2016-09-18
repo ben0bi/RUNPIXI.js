@@ -261,7 +261,8 @@ var RUNPIXI = function()
 	};
 
 	// shader stuff.
-	this.CreateShader = function(name, shadercode) {_shaders[name] = new PIXI.AbstractFilter('', shadercode); return _shaders[name];};
+	this.CreatePixelShader = function(name, shadercode) {_shaders[name] = new PIXI.AbstractFilter('', shadercode); return _shaders[name];};
+	this.CreateVertexShader = function(name, shadercode) {_shaders[name] = new PIXI.AbstractFilter(shadercode, ''); return _shaders[name];};
 	this.GetShader = function(name) {return _shaders[name];};
 
 	// resize renderer if size changes.
