@@ -192,6 +192,7 @@ var RUNPIXI = function()
 	var _PIXIBackStage = new PIXI.Container();	// the fixed background stage.
 	var _PIXIScrollStage = new PIXI.Container();	// the scrolling flexible stage.
 	var _PIXIHUDStage = new PIXI.Container();	// the fixed foreground stage.
+	var _shaders = Array();				// array with the shaders.
 
 	this.BACKSTAGE = function() {return _PIXIBackStage;};
 	this.SCROLLSTAGE = function() {return _PIXIScrollStage;};
@@ -259,6 +260,10 @@ var RUNPIXI = function()
 		return s;
 	};
 
+	// shader stuff.
+	this.CreateShader = function(name, shadercode) {_shaders[name] = new PIXI.AbstractFilter('', shadercode); return _shaders[name];};
+	this.GetShader = function(name) {return _shaders[name];};
+
 	// resize renderer if size changes.
 	window.addEventListener('resize', function(event){
 		if(_PIXIHTMLScreen==null || _PIXIRenderer==null)
@@ -297,6 +302,10 @@ RUNPIXI.ScrollRateStep = 0.5;	// how fast from minimum to maximum scroll speed?
 RUNPIXI.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex, scaley) {return RUNPIXI.instance.CreateSprite(texture,x,y,rotation,anchorx,anchory, scalex, scaley);};
 // short of createsprite, only with position - anchor is 0.5, scale is 1, rotation is 0
 RUNPIXI.Sprite = function(texture, x, y) {return RUNPIXI.instance.CreateSprite(texture, x, y,0,0.5,0.5,1,1);};
+
+// Shader stuff.
+RUNPIXI.CreateShader = function(name, shadercode) {return RUNPIXI.instance.CreateShader(name,shadercode);};
+RUNPIXI.GetShader = function(name) {return RUNPIXI.instance.GetShader(name);};
 
 // shorts to the stages.
 RUNPIXI.STAGE = function() {return RUNPIXI.instance.SCROLLSTAGE();};
