@@ -264,6 +264,12 @@ var RUNPIXI = function()
 	this.CreatePixelShader = function(name, shadercode) {_shaders[name] = new PIXI.AbstractFilter('', shadercode); return _shaders[name];};
 	this.CreateVertexShader = function(name, shadercode) {_shaders[name] = new PIXI.AbstractFilter(shadercode, ''); return _shaders[name];};
 	this.GetShader = function(name) {return _shaders[name];};
+	this.ApplyShader = function(pixiSprite, shaderName) 
+	{
+		var shader = this.GetShader(name);
+		if(shader)
+			pixiSprite.filters = [shader];
+	};
 
 	// resize renderer if size changes.
 	window.addEventListener('resize', function(event){
@@ -305,8 +311,11 @@ RUNPIXI.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scale
 RUNPIXI.Sprite = function(texture, x, y) {return RUNPIXI.instance.CreateSprite(texture, x, y,0,0.5,0.5,1,1);};
 
 // Shader stuff.
-RUNPIXI.CreateShader = function(name, shadercode) {return RUNPIXI.instance.CreateShader(name,shadercode);};
+RUNPIXI.CreatePixelShader = function(name, shadercode) {return RUNPIXI.instance.CreatePixelShader(name,shadercode);};
+RUNPIXI.CreateVertexShader = function(name, shadercode) {return RUNPIXI.instance.CreateVertexShader(name,shadercode);};
+RUNPIXI.ApplyShader = function(pixiSprite, shaderName) {return RUNPIXI.instance.ApplyShader(pixiSprite,shaderName);};
 RUNPIXI.GetShader = function(name) {return RUNPIXI.instance.GetShader(name);};
+
 
 // shorts to the stages.
 RUNPIXI.STAGE = function() {return RUNPIXI.instance.SCROLLSTAGE();};
