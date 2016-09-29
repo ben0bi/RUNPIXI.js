@@ -261,10 +261,10 @@ var RUNPIXI = function()
 	};
 
 	// shader stuff.
-	this.CreatePixelShader = function(name, shadercode) 
+	this.CreateFragmentShader = function(name, shadercode) 
 	{
 		_shaders[name] = new PIXI.AbstractFilter('', shadercode);
-		console.log("RUNPIXI: Pixel shader {"+name+"} created.");
+		console.log("RUNPIXI: Fragment shader {"+name+"} created.");
 		 return _shaders[name];
 	};
 	this.CreateVertexShader = function(name, shadercode) 
@@ -278,7 +278,7 @@ var RUNPIXI = function()
 	{
 		var shader = this.GetShader(shaderName);
 		if(shader)
-			pixiSprite.filters = [shader];
+			pixiSprite.shader = shader;
 	};
 
 	// resize renderer if size changes.
@@ -291,6 +291,7 @@ var RUNPIXI = function()
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
 	});
 
+	// get scroll keys.
 	$(document).ready(function()
 	{
 		$(document).keydown(function(e)
