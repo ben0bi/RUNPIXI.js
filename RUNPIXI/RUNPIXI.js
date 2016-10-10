@@ -21,6 +21,7 @@
 			// Additional Stuff:
 
 			// TEXTURE-MANAGER [TODO] 
+			// [TODO] use pixi texture manager.
 			var Tex = RUNPIXI.GetTexture("myimage.png"); // just LOADS the texture ONCE...
 			var myPixiSprite = new PIXI.Sprite(Tex);
 
@@ -65,6 +66,8 @@ var RUNPIXI = function()
 		else
 			console.log("ERROR: RUNPIXI.setMainLoopMethod needs a function as parameter.");
 	};
+
+// TODO: MINIMIZE SCROLLING STUFF
 
 	// SCROLLING STUFF...way to much, minimize it.
 	var _actualScrollRate = 0.0;	// this is how much is to be scrolled.
@@ -261,6 +264,7 @@ var RUNPIXI = function()
 	};
 
 	// shader stuff.
+	// WARNING: It uses the .shader variable, not the .filters array!
 	this.CreateFragmentShader = function(name, shadercode) 
 	{
 		_shaders[name] = new PIXI.AbstractFilter('', shadercode);
@@ -279,6 +283,67 @@ var RUNPIXI = function()
 		var shader = this.GetShader(shaderName);
 		if(shader)
 			pixiSprite.shader = shader;
+	};
+
+	// render the screen to a texture and return that.
+	this.getScreenAsTexture = function(renderWidth, renderHeight)
+	{
+		// _PIXIRootStage is the container which has to be scaled and rendered to texture.
+		// _PIXIRenderer is the renderer of this class.
+
+		var renderer = _PIXIRenderer;
+
+		// set render size if <= 0
+		if(renderWidth <= 0)
+			renderWidth = renderer.width;
+		if(renderHeight <= 0)
+			renderHeight = renderer.height;
+		
+		// compute scaling factor.
+		var scale = 1;
+		var sc = renderWidth;
+		var sc2 = renderer.width;
+		if(renderHeight<renderWidth)
+		{
+			sc = renderHeight;
+			sc2 = renderer.height;
+		}
+		if(sc > 0 && sc2 > 0)
+			scale = sc / sc2;
+
+		// first, render the screen to a texture.
+		var origTex = new PIXI.RenderTexture(renderer, renderer.width, renderer.height);
+		origTex.render(_PIXIRootStage);
+
+		// create sprite and container to resize the texture
+		var stage = new PIXI.Container();
+		var sprite = new PIXI.Sprite(origTex);
+		sprite.scale.x = scale;
+		sprite.scale.y = scale;
+		stage.addChild(sprite);
+		
+		// render the original again in scaled mode.
+		var renderTex = new PIXI.RenderTexture(renderer, renderWidth, renderHeight);
+		renderTex.render(stage);
+
+		// remove the unused stuff.
+		stage.destroy();
+		sprite.destroy();
+		origTex.destroy();
+
+		// finally return the scaled texture.
+ 		return renderTex;
+	};
+
+	// returns the screen as an array of size 4*width*height, rgba
+	this.getScreenAsArray = function(width, height)
+	{
+		if(_PIXIRenderer==null)
+			return;
+		var rtex = this.getScreenAsTexture(width, height);
+		var data = rtex.getPixels();
+		rtex.destroy();
+		return data;
 	};
 
 	// resize renderer if size changes.
@@ -347,3 +412,7 @@ RUNPIXI.initialize = function(pixicontainerID, mainLoopFunction)
 // Helper to create a pixelart screen.
 RUNPIXI.PIXELATED = function() {PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;};
 
+// get screen as texture.
+RUNPIXI.GetScreenAsTexture = function(w,h) {return RUNPIXI.instance.getScreenAsTexture(w,h);};
+// ..and as array.
+RUNPIXI.GetScreenAsArray = function(w,h) {return RUNPIXI.instance.getScreenAsArray(w,h);}
