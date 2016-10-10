@@ -1,16 +1,16 @@
 RUNPIXI.js
-v0.2-alpha
+v0.3-alpha
 
 A library to get PIXI.js to run with ease.
 
 By Beni Yager @ 2016
 
-Needs jQuery and pixi.js.
+Needs pixi.js.
+http://www.pixijs.com/
 
 Usage:
 
-Create a div with a given size:
-WARNING: It does not work with the body tag yet.
+Create a div with a given size and give it an id:
 
 <style>
 #pixiscreen
@@ -27,7 +27,7 @@ Create a loop function and call initialize:
 
 <script>
 function loopfunction() {}
-RUNPIXI.initialize("#pixiscreen", loopfunction);
+RUNPIXI.initialize("pixiscreen", loopfunction);
 </script>
 
 That's about it.
@@ -37,6 +37,8 @@ There are more and more functionalities, see the documentation below.
 
 CHANGES
 -------
+0.3
++ Removed all jQuery references, you can now use this library without jQuery.
 0.2
 + Capture the whole screen: getScreenToTexture and getScreenToArray
 0.1 
@@ -73,7 +75,7 @@ GLOBAL FUNCTIONS
 
 RUNPIXI.initialize(pixicontainerID, mainLoopFunction)
 	Parameters:
-		pixicontainerID: The jQuery-id or class (with prefix) of the DOM element where pixi should be rendered.
+		pixicontainerID: The id of the DOM element where pixi should be rendered.
 		mainLoopFunction: The function which should be called each frame.
 	+ Initializes the pixi screen in the given DOM element and sets the main loop function.
 		This is the function for what this library is made for.
@@ -124,14 +126,12 @@ PUBLIC FUNCTIONS
 
 RUNPIXI.instance.initialize(pixicontainerID)
 	Parameters:
-		pixicontainerID : A jQuery-id or class. 
-			Please use an id (with prefix #, e.g. #mypixiscreen), 
-			I did not test it with classes or html tags.
+		pixicontainerID : The id of the DOM element.
 	+ Initializes PIXI in the given DOM element.
 		You do not need to use that function directly, use RUNPIXI.initialize instead. 
 		This is the main function of this library.
 		The element should be a div and should have a given width and height.
-		The pixi screen will notice a resize and adjust itself to it, though.
+		RUNPIXI will notice a resize and adjust the renderer to it, though.
 
 RUNPIXI.instance.setMainLoopFunction(m)
 	Parameters:

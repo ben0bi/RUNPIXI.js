@@ -1,5 +1,5 @@
 /* Helper to get PIXI.js to run.
-	Needs jQuery and PIXI.js
+	Needs PIXI.js
 
 		Just use RUNPIXI.initialize to get a running PIXI screen.
 		RUNPIXI provides you with three stages (containers) to draw on:
@@ -16,26 +16,17 @@
 			}
 			
 			// you need only this single line of code to make pixi run inside your div.
-			RUNPIXI.initialize("#mypixiscreen", loopfunction);
+			RUNPIXI.initialize("mypixiscreen", loopfunction);
 
 			// Additional Stuff:
-
-			// TEXTURE-MANAGER [TODO] 
-			// [TODO] use pixi texture manager.
-			var Tex = RUNPIXI.GetTexture("myimage.png"); // just LOADS the texture ONCE...
-			var myPixiSprite = new PIXI.Sprite(Tex);
-
-			var Tex2 = RUNPIXI.GetTexture("myimage.png"); // ...now it re-uses the already loaded texture.
-			...
-
-			// SCROLLING
-			[TODO]			
-
+		
 			// get access to the main stage with RSTAGE(), RUNPIXI.STAGE() or RUNPIXI.instance.SCROLLSTAGE().
 			// RBACKSTAGE(), RUNPIXI.BACKSTAGE() or RUNPIXI.instance.BACKSTAGE() for the background stage.
 			// RHUDSTAGE(), RUNPIXI.HUDSTAGE() or RUNPIXI.instance.HUDSTAGE() for the foreground stage.		
+
 			RSTAGE().addChild(myPixiSprite);
 
+			// more in the readme file.
 		</script>
 */
 
@@ -61,7 +52,7 @@ var RUNPIXI = function()
 	var _MainLoopFunction = function() {};
 	this.setMainLoopFunction = function(m)
 	{
-		if(jQuery.isFunction(m))
+		if(typeof(m) === 'function')
 			_MainLoopFunction = m;
 		else
 			console.log("ERROR: RUNPIXI.setMainLoopMethod needs a function as parameter.");
@@ -203,7 +194,7 @@ var RUNPIXI = function()
 
 	// ground work
 	var _PIXIRenderer = null;
-	var _PIXIHTMLScreen = null;
+	var _PIXIDOMScreen = null; 	// [new] not using jquery.
 	var _PIXIWidth = 0;
 	var _PIXIHeight = 0;
 	
@@ -220,21 +211,22 @@ var RUNPIXI = function()
 	// Initialize PIXI.
 	var _PIXIInitialize = function(pixicontainerID)
 	{
-		if($(pixicontainerID).length===0)
+		if(document.getElementById(pixicontainerID) == null)
 		{
-			console.log("ERROR: No screen given for PIXI. Aborting!");
+			console.log("ERROR: DOM element for PIXI screen not found. Aborting!");
 			return;
 		}
 		
 		// just initialize it once.
-		if(_PIXIHTMLScreen == null || _PIXIRenderer == null)
+		if(_PIXIDOMScreen == null || _PIXIRenderer == null)
 		{
-			_PIXIHTMLScreen = $(pixicontainerID);
-			_PIXIWidth = _PIXIHTMLScreen.width();
-			_PIXIHeight = _PIXIHTMLScreen.height();
+			_PIXIDOMScreen = document.getElementById(pixicontainerID);
+
+			_PIXIWidth = _PIXIDOMScreen.clientWidth;
+			_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		
 			_PIXIRenderer = PIXI.autoDetectRenderer(_PIXIWidth, _PIXIHeight,{backgroundColor : 0x1099bb});
-			_PIXIHTMLScreen.append(_PIXIRenderer.view);
+			_PIXIDOMScreen.appendChild(_PIXIRenderer.view);
 						
 			// create hierarchy
 			_PIXIRootStage.addChild(_PIXIBackStage);
@@ -348,29 +340,26 @@ var RUNPIXI = function()
 
 	// resize renderer if size changes.
 	window.addEventListener('resize', function(event){
-		if(_PIXIHTMLScreen==null || _PIXIRenderer==null)
+		if(_PIXIDOMScreen==null || _PIXIRenderer==null)
 			return;
 		
-		_PIXIWidth = _PIXIHTMLScreen.width();
-		_PIXIHeight = _PIXIHTMLScreen.height();
+		_PIXIWidth = _PIXIDOMScreen.clientWidth;
+		_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
 	});
 
-	// get scroll keys.
-	$(document).ready(function()
+	// register scroll keys.
+	document.addEventListener('keydown', function(e)
 	{
-		$(document).keydown(function(e)
-		{
-			if(RUNPIXI.ScrollWithKeys == true)
-				_ScrollKeysDown(e);
-		});
-
-		$(document).keyup(function(e) 
-		{
-			if(RUNPIXI.ScrollWithKeys == true)
-				_ScrollKeysUp(e);
-		});	
+		if(RUNPIXI.ScrollWithKeys == true)
+			_ScrollKeysDown(e);
 	});
+
+	document.addEventListener('keyup', function(e) 
+	{
+		if(RUNPIXI.ScrollWithKeys == true)
+			_ScrollKeysUp(e);
+	});	
 };
 RUNPIXI.instance = new RUNPIXI();
 
