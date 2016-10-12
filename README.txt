@@ -1,5 +1,5 @@
 RUNPIXI.js
-v0.3-alpha
+v0.3.1
 
 A library to get PIXI.js to run with ease.
 
@@ -8,7 +8,8 @@ By Beni Yager @ 2016
 Needs pixi.js.
 http://www.pixijs.com/
 
-Usage:
+(MAIN-)USAGE:
+-------------
 
 Create a div with a given size and give it an id:
 
@@ -34,6 +35,34 @@ That's about it.
 
 The main stage can be scrolled with the arrow keys and asdw.
 There are more and more functionalities, see the documentation below.
+
+COMPOSER
+--------
+
+To download RUNPIXI into your project with composer, add those lines to your composer.json:
+
+{
+	...	
+
+    "repositories": [
+
+	...,
+
+        {
+            "type": "vcs",
+            "url": "https://github.com/ben0bi/RUNPIXI.js.git"
+        }
+    ],
+    "require": {
+	...,
+        "ben0bienterprises/RUNPIXI" : "dev-master@dev"
+    },
+
+	...
+}
+
+Now you can load RUNPIXI by typing "composer update" into your console.
+
 
 CHANGES
 -------
