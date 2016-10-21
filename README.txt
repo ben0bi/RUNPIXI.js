@@ -66,6 +66,9 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
+0.3.1
++ Inverted Scrollrate.
++ You can use RUNPIXI.InvertScrollX and RUNPIXI.InvertScrollY to determine if it is inverted.
 0.3
 + Removed all jQuery references, you can now use this library without jQuery.
 0.2
@@ -97,7 +100,8 @@ RUNPIXI.ScrollWithKeys	: true|false : Enable RUNPIXI to scroll the main stage wi
 RUNPIXI.ScrollRateMin	: Minimum scroll rate (in pixels) when scrolling starts.
 RUNPIXI.ScrollRateMax	: Maximum scroll rate in pixels.
 RUNPIXI.ScrollRateStep  : How much scroll rate to add each frame(?) until ScrollRateMax is reached.
-
+RUNPIXI.InvertScrollX	: true|false : Invert the scrollrate horizontally?
+RUNPIXI.InvertScrollY	: true|false : Invert the scrollrate vertically.
 
 GLOBAL FUNCTIONS
 ----------------

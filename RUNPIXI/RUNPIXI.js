@@ -74,6 +74,11 @@ var RUNPIXI = function()
 	var _ScrollActivate = function(ratex, ratey)
 	{
 		_isScrolling = true;
+		// v0.3.1: invert the rate for "real" scrolling.
+		if(RUNPIXI.InvertScrollX == true)
+			ratex = -ratex;
+		if(RUNPIXI.InvertScrollY == true)
+			ratey = -ratey;
 		if(ratex!=0) _ScrollRX = ratex;
 		if(ratey!=0) _ScrollRY = ratey;
 	};
@@ -368,6 +373,8 @@ RUNPIXI.ScrollWithKeys = true; 	// enable keys for scrolling.
 RUNPIXI.ScrollRateMin = 5;	// minimum scroll speed.
 RUNPIXI.ScrollRateMax = 20;	// maximum scroll speed.
 RUNPIXI.ScrollRateStep = 0.5;	// how fast from minimum to maximum scroll speed?
+RUNPIXI.InvertScrollX = true;	// Scrolling is inverted on the X axis.
+RUNPIXI.InvertScrollY = true;	// Scrolling is inverted on the Y axis.
 // ENDOF Scroll stuff.
 
 // create sprite with position, rotation, anchor and size.
