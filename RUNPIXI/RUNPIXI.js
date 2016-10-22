@@ -202,6 +202,9 @@ var RUNPIXI = function()
 	var _PIXIDOMScreen = null; 	// [new] not using jquery.
 	var _PIXIWidth = 0;
 	var _PIXIHeight = 0;
+
+	// 0.3.2: Return screen size.
+	this getScreenSize = function() {var o;o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
 	
 	// render function.
 	// _MainLoopFunction is "your" function.
@@ -376,6 +379,9 @@ RUNPIXI.ScrollRateStep = 0.5;	// how fast from minimum to maximum scroll speed?
 RUNPIXI.InvertScrollX = true;	// Scrolling is inverted on the X axis.
 RUNPIXI.InvertScrollY = true;	// Scrolling is inverted on the Y axis.
 // ENDOF Scroll stuff.
+
+// 0.3.2: Return PIXI size.
+RUNPIXI.getScreenSize = function() {return RUNPIXI.instance.getScreenSize();}
 
 // create sprite with position, rotation, anchor and size.
 RUNPIXI.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex, scaley) {return RUNPIXI.instance.CreateSprite(texture,x,y,rotation,anchorx,anchory, scalex, scaley);};

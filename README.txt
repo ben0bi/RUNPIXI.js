@@ -1,5 +1,5 @@
 RUNPIXI.js
-v0.3.1
+v0.3.2
 
 A library to get PIXI.js to run with ease.
 
@@ -66,6 +66,8 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
+0.3.2
++ Return screen size with getScreenSize();
 0.3.1
 + Inverted Scrollrate.
 + You can use RUNPIXI.InvertScrollX and RUNPIXI.InvertScrollY to determine if it is inverted.
@@ -126,6 +128,9 @@ RBACKSTAGE() or RUNPIXI.BACKSTAGE()
 RUNPIXI.PIXELATED()
 	+ Sets the PIXI scale mode to PIXI.SCALE_MODES.NEAREST for pixel perfect rendering.
 
+RUNPIXI.getScreenSize()
+	+ Returns the screen size as object with x,y,w,h (x=w, y=h)
+
 RUNPIXI.CreateSprite(texture, x, y, rotation, anchorx, anchory, scalex, scaley)
 	--> See RUNPIXI.instance.CreateSprite (below)
 
@@ -179,6 +184,9 @@ RUNPIXI.instance.SCROLLSTAGE()
 
 RUNPIXI.instance.BACKSTAGE()
 	+ Returns the background container/stage.
+
+RUNPIXI.instance.getScreenSize()
+	+ Returns the screen size as object with x,y,w,h (x=w, y=h)
 
 RUNPIXI.instance.CreateSprite(texture, x, y, rotation, anchorx, anchory, scalex, scaley)
 	Parameters:
