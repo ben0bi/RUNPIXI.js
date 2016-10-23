@@ -66,6 +66,8 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
+0.3.4
++ RUNPIXI.instance.setResizeFunction - set a function (with event parameter) which is called on resize.
 0.3.3
 + Return the renderer with RENDERER();
 0.3.2
@@ -180,6 +182,11 @@ RUNPIXI.instance.setMainLoopFunction(m)
 	Parameters:
 		m : Function
 	+ Sets the function which is called each frame. You do not need to use that function directly.
+
+RUNPIXI.instance.setResizeFunction(m)
+	Parameters:
+		m : Function
+	+ Sets the function which is called after resize.
 
 RUNPIXI.instance.HUDSTAGE()
 	+ Returns the foreground container/stage.

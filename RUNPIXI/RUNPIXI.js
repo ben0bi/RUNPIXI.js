@@ -50,12 +50,21 @@ var RUNPIXI = function()
 {	
 	// this function is called each frame.
 	var _MainLoopFunction = function() {};
+	var _resizeFunction = null;
 	this.setMainLoopFunction = function(m)
 	{
 		if(typeof(m) === 'function')
 			_MainLoopFunction = m;
 		else
 			console.log("ERROR: RUNPIXI.setMainLoopMethod needs a function as parameter.");
+	};
+
+	this.setResizeFunction = function(m)
+	{
+		if(typeof(m) === 'function')
+			_resizeFunction = m;
+		else
+			console.log("ERROR: RUNPIXI.setResizeMethod needs a function as parameter.");
 	};
 
 // TODO: MINIMIZE SCROLLING STUFF
@@ -357,6 +366,8 @@ var RUNPIXI = function()
 		_PIXIWidth = _PIXIDOMScreen.clientWidth;
 		_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
+		if(typeof _resizeFunction === 'function')
+			_resizeFunction(event);
 	});
 
 	// register scroll keys.
