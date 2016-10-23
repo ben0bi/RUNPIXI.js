@@ -1,3 +1,4 @@
+// v0.3.5
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -216,7 +217,7 @@ var RUNPIXI = function()
 	var _PIXIHeight = 0;
 
 	// 0.3.2: Return screen size.
-	this.getScreenSize = function() {var o;o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
+	this.getScreenSize = function() {var o=new Object();o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
 	
 	// render function.
 	// _MainLoopFunction is "your" function.

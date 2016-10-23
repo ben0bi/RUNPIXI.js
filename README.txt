@@ -1,5 +1,5 @@
 RUNPIXI.js
-v0.3.3
+v0.3.5
 
 A library to get PIXI.js to run with ease.
 
@@ -66,19 +66,15 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
-0.3.4
-+ RUNPIXI.instance.setResizeFunction - set a function (with event parameter) which is called on resize.
-0.3.3
-+ Return the renderer with RENDERER();
-0.3.2
-+ Return screen size with getScreenSize();
+0.3.5 + BugFix for getScreenSize();
+0.3.4 + RUNPIXI.instance.setResizeFunction - set a function (with event parameter) which is called on resize.
+0.3.3 + Return the renderer with RENDERER();
+0.3.2 + Return screen size with getScreenSize();
 0.3.1
 + Inverted Scrollrate.
 + You can use RUNPIXI.InvertScrollX and RUNPIXI.InvertScrollY to determine if it is inverted.
-0.3
-+ Removed all jQuery references, you can now use this library without jQuery.
-0.2
-+ Capture the whole screen: getScreenToTexture and getScreenToArray
+0.3 + Removed all jQuery references, you can now use this library without jQuery.
+0.2 + Capture the whole screen: getScreenToTexture and getScreenToArray
 0.1 
 + It'sa working.
 + Scrolling (needs update, it's to much code.)
