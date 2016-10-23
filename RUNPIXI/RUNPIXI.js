@@ -199,12 +199,15 @@ var RUNPIXI = function()
 
 	// ground work
 	var _PIXIRenderer = null;
+	// 0.3.3: get renderer
+	this.RENDERER = function() {return _PIXIRenderer;};
+
 	var _PIXIDOMScreen = null; 	// [new] not using jquery.
 	var _PIXIWidth = 0;
 	var _PIXIHeight = 0;
 
 	// 0.3.2: Return screen size.
-	this getScreenSize = function() {var o;o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
+	this.getScreenSize = function() {var o;o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
 	
 	// render function.
 	// _MainLoopFunction is "your" function.
@@ -403,6 +406,9 @@ RUNPIXI.HUDSTAGE = function() {return RUNPIXI.instance.HUDSTAGE();};
 RSTAGE = function() {return RUNPIXI.instance.SCROLLSTAGE();};
 RBACKSTAGE = function() {return RUNPIXI.instance.BACKSTAGE();};
 RHUDSTAGE = function() {return RUNPIXI.instance.HUDSTAGE();};
+
+// Get renderer.
+RUNPIXI.RENDERER = function() {return RUNPIXI.instance.RENDERER();};
 
 // the MAIN function. ;)
 RUNPIXI.initialize = function(pixicontainerID, mainLoopFunction) 

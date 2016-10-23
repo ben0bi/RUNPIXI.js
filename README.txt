@@ -1,5 +1,5 @@
 RUNPIXI.js
-v0.3.2
+v0.3.3
 
 A library to get PIXI.js to run with ease.
 
@@ -66,6 +66,8 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
+0.3.3
++ Return the renderer with RENDERER();
 0.3.2
 + Return screen size with getScreenSize();
 0.3.1
@@ -124,6 +126,9 @@ RHUDSTAGE() or RUNPIXI.HUDSTAGE()
 
 RBACKSTAGE() or RUNPIXI.BACKSTAGE()
 	+ Returns RUNPIXI.instance.BACKSTAGE()
+
+RUNPIXI.RENDERER()
+	+ Returns the pixi renderer.
 
 RUNPIXI.PIXELATED()
 	+ Sets the PIXI scale mode to PIXI.SCALE_MODES.NEAREST for pixel perfect rendering.
@@ -184,6 +189,9 @@ RUNPIXI.instance.SCROLLSTAGE()
 
 RUNPIXI.instance.BACKSTAGE()
 	+ Returns the background container/stage.
+
+RUNPIXI.instance.RENDERER()
+	+ Return the pixi renderer.
 
 RUNPIXI.instance.getScreenSize()
 	+ Returns the screen size as object with x,y,w,h (x=w, y=h)
