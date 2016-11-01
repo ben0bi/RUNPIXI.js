@@ -1,5 +1,9 @@
 RUNPIXI.js
-v0.3.5
+
+WARNING: THIS IS v0.4.0 with
+DOCUMENTATION FROM v0.3.5
+Scrolling Doc is not valid anymore.
+
 
 A library to get PIXI.js to run with ease.
 
