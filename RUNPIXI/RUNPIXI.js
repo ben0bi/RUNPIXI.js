@@ -1,4 +1,4 @@
-// v0.3.5
+// v0.4.0 (<= 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -41,17 +41,71 @@ Hierarchy
 
 /*
 	TODO:
-	Scrolling...done.
 	Texture Manager
 		Load Texture if not loaded.
 		Else get it from the list.
 */
 
+// 0.4.0 NEW RUNPIXIKEY
+// Funcs need one param p.
+var RUNPIXIKEY = function()
+{
+	var _keyCode = -1;
+	var _keyChar = '';
+	var _func_keyDown = null;
+	var _func_keyUp = null;
+	var _func_params_down = null;
+	var _func_params_up = null;
+
+	// set that stuff.
+	this.Set = function(keycode, keychar, keydownfunc, keyupfunc)
+	{
+		_keyCode = keycode;
+		_keyChar = keychar;
+		_func_keyDown = keydownfunc;
+		_func_keyUp = keyupfunc;
+	};
+
+	this.SetDownFuncParams = function(params) {_func_params_down = params;};
+	this.SetUpFuncParams = function(params) {_func_params_up = params;};
+
+	var _state = function(e)
+	{
+		var k = String.fromCharCode(e.which);		
+
+		if((_keyCode > 0 && e.keyCode == _keyCode) || 
+		(_keyChar != '' && _keyChar.toLowerCase() == k.toLowerCase()))
+			return true;
+
+		return false;
+	};
+
+	// called if a key is pressed down.
+	this.Down = function(event)
+	{
+		// return if it is not a function.
+		if(typeof(_func_keyDown) !== 'function')
+			return;
+		if(_state(event)==true)
+			_func_keyDown(_func_params_down);
+	};
+
+	// called if a key is released.
+	this.Up = function(event)
+	{
+		// return if it is not a function.
+		if(typeof(_func_keyUp) !== 'function')
+			return;		
+		if(_state(event)==true)
+			_func_keyUp(_func_params_up);
+	};
+};
+// ENDOF 0.4.0
+
 var RUNPIXI = function()
 {	
 	// this function is called each frame.
 	var _MainLoopFunction = function() {};
-	var _resizeFunction = null;
 	this.setMainLoopFunction = function(m)
 	{
 		if(typeof(m) === 'function')
@@ -60,6 +114,8 @@ var RUNPIXI = function()
 			console.log("ERROR: RUNPIXI.setMainLoopMethod needs a function as parameter.");
 	};
 
+	// this is called after resize.	
+	var _resizeFunction = null;
 	this.setResizeFunction = function(m)
 	{
 		if(typeof(m) === 'function')
@@ -68,140 +124,28 @@ var RUNPIXI = function()
 			console.log("ERROR: RUNPIXI.setResizeMethod needs a function as parameter.");
 	};
 
-// TODO: MINIMIZE SCROLLING STUFF
-
-	// SCROLLING STUFF...way to much, minimize it.
-	var _actualScrollRate = 0.0;	// this is how much is to be scrolled.
-	var _isScrolling = false;	// is it scrolling?
-	var _ScrollRX = 0; 		// -1, 0, 1 - also if keys are not pressed.
-	var _ScrollRY = 0;		// -1, 0, 1 - also if keys are not pressed.
-	var _ScrollKeyDown = false;	// the keys.
-	var _ScrollKeyUp = false;
-	var _ScrollKeyLeft = false;
-	var _ScrollKeyRight = false;
-
-	// activate scrolling in a specific direction.
-	var _ScrollActivate = function(ratex, ratey)
-	{
-		_isScrolling = true;
-		// v0.3.1: invert the rate for "real" scrolling.
-		if(RUNPIXI.InvertScrollX == true)
-			ratex = -ratex;
-		if(RUNPIXI.InvertScrollY == true)
-			ratey = -ratey;
-		if(ratex!=0) _ScrollRX = ratex;
-		if(ratey!=0) _ScrollRY = ratey;
-	};
-
-	// get scroll keys down
-	var _ScrollKeysDown = function(e)
-	{
-		var k = String.fromCharCode(e.which);
-
-		// scroll keys
-                if(e.keyCode == 38 || k.toLowerCase() == 'w')
-                {
-                	if(!_ScrollKeyUp)
-                            _actualScrollRate = RUNPIXI.ScrollRateMin;
-                        _ScrollActivate(0,-1);
-                        _ScrollKeyUp = true;
-                }
-                if(e.keyCode == 40 || k.toLowerCase() == 's')
-                {
-                        if(!_ScrollKeyDown)
-                            _actualScrollRate = RUNPIXI.ScrollRateMin;
-                        _ScrollActivate(0,1);
-                        _ScrollKeyDown = true;
-                }
-                if(e.keyCode == 37 || k.toLowerCase() == 'a')
-                {
-                        if(!_ScrollKeyLeft)
-                            _actualScrollRate = RUNPIXI.ScrollRateMin;
-                        _ScrollActivate(-1,0);
-                        _ScrollKeyLeft = true;
-                }
-                if(e.keyCode == 39 || k.toLowerCase() == 'd')
-                {
-                        if(!_ScrollKeyRight)
-                            _actualScrollRate = RUNPIXI.ScrollRateMin;
-                        _ScrollActivate(1,0);
-                        _ScrollKeyRight = true;
-                }
-	};
-
-	// get scroll keys up
-	var _ScrollKeysUp = function(e)
-	{
-		var k = String.fromCharCode(e.which);
-
-		// scroll keys
-                if(e.keyCode == 38 || k.toLowerCase() == 'w') {_ScrollKeyUp = false;}
-                if(e.keyCode == 40 || k.toLowerCase() == 's') {_ScrollKeyDown = false;}
-                if(e.keyCode == 37 || k.toLowerCase() == 'a') {_ScrollKeyLeft = false;}
-        	if(e.keyCode == 39 || k.toLowerCase() == 'd') {_ScrollKeyRight = false;}
-	};
-
-	// update scrolling
-	var _ScrollUpdate = function()
-	{
-		if(_isScrolling)
-		{
-			// increase scroll rate.
-			if(_actualScrollRate < RUNPIXI.ScrollRateMax)
-				_actualScrollRate += RUNPIXI.ScrollRateStep;
-			
-			// don't go over max scroll rate.
-			if(_actualScrollRate > RUNPIXI.ScrollRateMax)
-				_actualScrollRate = RUNPIXI.ScrollRateMax;
-		}else{
-			// decrease scroll rate
-			if(_actualScrollRate > RUNPIXI.ScrollRateMin)
-				_actualScrollRate -= RUNPIXI.ScrollRateStep;
-
-			// reset if done.
-			if(_actualScrollRate <= RUNPIXI.ScrollRateMin)
-			{
-				_actualScrollRate = 0;
-				_ScrollRX=0;
-				_ScrollRY=0;
-			}
-		}
-
-		// reset scrolling if no key is pressed and scrollwithkeys is true.
-		if(RUNPIXI.ScrollWithKeys==true)
-		{
-			// decrease vector 1->0 if no key is pressed.
-			if(!_ScrollKeyRight && !_ScrollKeyLeft)
-			{
-				_ScrollRX *= 0.95;
-				if(Math.abs(_ScrollRX)<RUNPIXI.ScrollRateStep)
-					_ScrollRX = 0;
-			};
-
-			if(!_ScrollKeyUp && !_ScrollKeyDown)
-			{
-				_ScrollRY *= 0.95;
-				if(Math.abs(_ScrollRY)<RUNPIXI.ScrollRateStep)
-					_ScrollRY = 0;
-			};
-
-			// stop scrolling
-			if(!_ScrollKeyRight && !_ScrollKeyLeft && !_ScrollKeyUp && !_ScrollKeyDown)
-				_isScrolling = false;
-		}
-	
-		// eventually add the scroll rate.
-		_PIXIScrollStage.position.x += _ScrollRX * _actualScrollRate;
-		_PIXIScrollStage.position.y += _ScrollRY * _actualScrollRate;
-	};
-	
 	// PIXI STUFF
 	// stages
 	var _PIXIRootStage = new PIXI.Container();	// all other stages are childs of the root stage.
 	var _PIXIBackStage = new PIXI.Container();	// the fixed background stage.
 	var _PIXIScrollStage = new PIXI.Container();	// the scrolling flexible stage.
 	var _PIXIHUDStage = new PIXI.Container();	// the fixed foreground stage.
+
 	var _shaders = Array();				// array with the shaders.
+	var _keys = Array();				// 0.4.0 array with registered keys.
+
+	// 0.4.0 Register a key.
+	this.registerKey = function(keycode, keychar, downfunction, upfunction, downparams, upparams)
+	{
+		var k = new RUNPIXIKEY();
+		k.Set(keycode, keychar, downfunction, upfunction);
+		k.SetDownFuncParams(downparams);
+		k.SetUpFuncParams(upparams);
+		_keys.push(k);
+	};
+
+	// 0.4.0 clear all keys.
+	this.clearAllKeys = function() {_keys = new Array();};
 
 	this.BACKSTAGE = function() {return _PIXIBackStage;};
 	this.SCROLLSTAGE = function() {return _PIXIScrollStage;};
@@ -218,7 +162,7 @@ var RUNPIXI = function()
 
 	// 0.3.2: Return screen size.
 	this.getScreenSize = function() {var o=new Object();o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
-	
+
 	// render function.
 	// _MainLoopFunction is "your" function.
 	var _PIXILoopMethod = function()
@@ -261,6 +205,77 @@ var RUNPIXI = function()
 		}
 	};
 	this.initialize = function(pixicontainerID) {_PIXIInitialize(pixicontainerID);};
+
+// 0.4.0
+// NEW SCROLLING ENGINE
+	var _ScrollDirX = 0; // -1, 0, 1
+	var _ScrollDirY = 0; // -1, 0, 1
+	var _ScrollRateX = 0;
+	var _ScrollRateY = 0;
+	
+	this.ScrollX= function(direction) {_scrollActivate(direction, false);};
+	this.ScrollY= function(direction) {_scrollActivate(direction, true);};
+
+	var _scrollActivate = function(direction, isvertical)
+	{
+		var v = _ScrollDirX;
+		if(isvertical) 
+			v = _ScrollDirY;
+
+		if(direction == 0)
+			v = 0;
+		else
+			v += direction;
+
+		if(v < -1) v = -1;
+		if(v > 1) v = 1;
+
+		if(isvertical)
+			_ScrollDirY = v;
+		else
+			_ScrollDirX = v;
+	};
+
+	var _scrollIt = function(isvertical)
+	{
+		var v = _ScrollDirX;
+		var r = _ScrollRateX;
+		if(isvertical) 
+		{
+			v = _ScrollDirY;
+			r = _ScrollRateY;
+		}
+
+		if(v == 0)
+		{
+			r *= 0.9;
+			if(Math.abs(r) < 0.5)
+				r = 0;
+		}else{
+			r += v * (RUNPIXI.ScrollRateMax * 0.1);
+		}
+
+		if(r < -RUNPIXI.ScrollRateMax) r = -RUNPIXI.ScrollRateMax;
+		if(r > RUNPIXI.ScrollRateMax) r = RUNPIXI.ScrollRateMax;
+
+		if(isvertical)
+			_ScrollRateY = r;
+		else
+			_ScrollRateX = r;
+	};
+
+	var _ScrollUpdate = function()
+	{
+		var r = RUNPIXI.ScrollRateMax;
+		
+		_scrollIt(false);
+		_scrollIt(true);
+
+		_PIXIScrollStage.position.x += _ScrollRateX;
+		_PIXIScrollStage.position.y += _ScrollRateY;		
+	};
+// ENDOF NEW
+
 	
 	// create and return a sprite
 	this.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex,scaley)
@@ -359,6 +374,18 @@ var RUNPIXI = function()
 		return data;
 	};
 
+	// press or release a registered key.
+	var _key = function(event, keystate)
+	{
+		for(var i = 0; i < _keys.length; i++)
+		{
+			if(keystate=='down')
+				_keys[i].Down(event);
+			if(keystate=='up')
+				_keys[i].Up(event);
+		};
+	};
+
 	// resize renderer if size changes.
 	window.addEventListener('resize', function(event){
 		if(_PIXIDOMScreen==null || _PIXIRenderer==null)
@@ -367,32 +394,25 @@ var RUNPIXI = function()
 		_PIXIWidth = _PIXIDOMScreen.clientWidth;
 		_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
-		if(typeof _resizeFunction === 'function')
+		if(typeof(_resizeFunction) === 'function')
 			_resizeFunction(event);
 	});
 
-	// register scroll keys.
-	document.addEventListener('keydown', function(e)
-	{
-		if(RUNPIXI.ScrollWithKeys == true)
-			_ScrollKeysDown(e);
-	});
+	// keydown and keyup.
+	document.addEventListener('keydown', function(e){_key(e,'down');});
+	document.addEventListener('keyup', function(e) {_key(e,'up');});
 
-	document.addEventListener('keyup', function(e) 
-	{
-		if(RUNPIXI.ScrollWithKeys == true)
-			_ScrollKeysUp(e);
-	});	
 };
 RUNPIXI.instance = new RUNPIXI();
 
 // SCROLL stuff
-RUNPIXI.ScrollWithKeys = true; 	// enable keys for scrolling.
-RUNPIXI.ScrollRateMin = 5;	// minimum scroll speed.
-RUNPIXI.ScrollRateMax = 20;	// maximum scroll speed.
-RUNPIXI.ScrollRateStep = 0.5;	// how fast from minimum to maximum scroll speed?
-RUNPIXI.InvertScrollX = true;	// Scrolling is inverted on the X axis.
-RUNPIXI.InvertScrollY = true;	// Scrolling is inverted on the Y axis.
+RUNPIXI.ScrollRateMax = 10; // Maximum scroll speed in pixels/frame.
+
+// 0.4.0 register some keys for scrolling.
+RUNPIXI.instance.registerKey(-1,'a',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, -1, 0);
+RUNPIXI.instance.registerKey(-1,'d',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, 1, 0);
+RUNPIXI.instance.registerKey(-1,'w',RUNPIXI.instance.ScrollY,RUNPIXI.instance.ScrollY, -1, 0);
+RUNPIXI.instance.registerKey(-1,'s',RUNPIXI.instance.ScrollY,RUNPIXI.instance.ScrollY, 1, 0);
 // ENDOF Scroll stuff.
 
 // 0.3.2: Return PIXI size.
