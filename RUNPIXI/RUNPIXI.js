@@ -1,4 +1,4 @@
-// v0.4.0 (<= 0.3.5)
+// v0.4.1 (<= 0.4.0 <= 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -136,12 +136,48 @@ var RUNPIXI = function()
 
 	// 0.4.0 Register a key.
 	this.registerKey = function(keycode, keychar, downfunction, upfunction, downparams, upparams)
+		{return _registerKey(keycode, keychar, downfunction, upfunction, downparams, upparams);};
+
+	// 0.4.1 Register key in private function.
+	var _registerKey = function(keycode, keychar, downfunction, upfunction, downparams, upparams)
 	{
 		var k = new RUNPIXIKEY();
 		k.Set(keycode, keychar, downfunction, upfunction);
 		k.SetDownFuncParams(downparams);
 		k.SetUpFuncParams(upparams);
 		_keys.push(k);
+		return k;
+	};
+
+	// 0.4.1 Register key for scrolling.
+	this.registerScrollKey = function(keycode, keychar, direction)
+	{
+		var params = new Object();
+		params.direction = 0;
+		if(direction == 'left' || direction == 'up')
+			params.direction = -1;
+		if(direction == 'right' || direction == 'down')
+			params.direction = 1;
+
+		if(params.direction == 0)
+		{
+			console.log("RUNPIXI: registerScrollKey: Direction must be 'left', 'right', 'up' or 'down'. It's ["+direction+"].");
+			return;
+		}
+
+		params.isVertical = false;
+		// on keyup, the direction is 0. We need new params.
+		var upparams = new Object();
+		upparams.direction = 0;
+		upparams.isVertical = false;
+
+		if(direction == 'up' || direction == 'down')
+		{
+			params.isVertical = true;
+			upparams.isVertical = true;
+		};
+
+		_registerKey(keycode, keychar, _scrollHook, _scrollHook, params, upparams);
 	};
 
 	// 0.4.0 clear all keys.
@@ -216,12 +252,26 @@ var RUNPIXI = function()
 	this.ScrollX= function(direction) {_scrollActivate(direction, false);};
 	this.ScrollY= function(direction) {_scrollActivate(direction, true);};
 
+	// 0.4.1 Hook for the registerscrollkeys function.	
+	var _scrollHook = function(params)
+	{
+		// params needs .direction and .isVertical
+		_scrollActivate(params.direction, params.isVertical);
+	};
+
 	var _scrollActivate = function(direction, isvertical)
 	{
+		// maybe invert direction
+		if((RUNPIXI.Scroll_InvertX == true && isvertical == false) ||
+		(RUNPIXI.Scroll_InvertY == true && isvertical == true))
+			direction = -direction;
+	
+		// get the right value
 		var v = _ScrollDirX;
 		if(isvertical) 
 			v = _ScrollDirY;
 
+		// process
 		if(direction == 0)
 			v = 0;
 		else
@@ -230,6 +280,7 @@ var RUNPIXI = function()
 		if(v < -1) v = -1;
 		if(v > 1) v = 1;
 
+		// set
 		if(isvertical)
 			_ScrollDirY = v;
 		else
@@ -266,8 +317,6 @@ var RUNPIXI = function()
 
 	var _ScrollUpdate = function()
 	{
-		var r = RUNPIXI.ScrollRateMax;
-		
 		_scrollIt(false);
 		_scrollIt(true);
 
@@ -275,7 +324,6 @@ var RUNPIXI = function()
 		_PIXIScrollStage.position.y += _ScrollRateY;		
 	};
 // ENDOF NEW
-
 	
 	// create and return a sprite
 	this.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex,scaley)
@@ -407,12 +455,22 @@ RUNPIXI.instance = new RUNPIXI();
 
 // SCROLL stuff
 RUNPIXI.ScrollRateMax = 10; // Maximum scroll speed in pixels/frame.
+// 0.4.1
+RUNPIXI.Scroll_InvertX = true;
+RUNPIXI.Scroll_InvertY = true;
+
+// 0.4.1 register some keys for scrolling.
+RUNPIXI.instance.registerScrollKey(-1,'a','left');
+RUNPIXI.instance.registerScrollKey(-1,'d','right');
+RUNPIXI.instance.registerScrollKey(-1,'w','up');
+RUNPIXI.instance.registerScrollKey(-1,'s','down');
 
 // 0.4.0 register some keys for scrolling.
-RUNPIXI.instance.registerKey(-1,'a',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, -1, 0);
+/*RUNPIXI.instance.registerKey(-1,'a',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, -1, 0);
 RUNPIXI.instance.registerKey(-1,'d',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, 1, 0);
 RUNPIXI.instance.registerKey(-1,'w',RUNPIXI.instance.ScrollY,RUNPIXI.instance.ScrollY, -1, 0);
 RUNPIXI.instance.registerKey(-1,'s',RUNPIXI.instance.ScrollY,RUNPIXI.instance.ScrollY, 1, 0);
+*/
 // ENDOF Scroll stuff.
 
 // 0.3.2: Return PIXI size.
