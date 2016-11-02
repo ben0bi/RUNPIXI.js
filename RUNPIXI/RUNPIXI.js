@@ -1,4 +1,4 @@
-// v0.4.1 (<= 0.4.0 <= 0.3.5)
+// v0.5.0 (0.4.1 <= 0.4.0 <= 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -50,7 +50,8 @@ Hierarchy
 // Funcs need one param p.
 var RUNPIXIKEY = function()
 {
-	var _keyCode = -1;
+	// 0.5.0 Use isKeyCode instead of keycode
+	var _isKeyCode = false;
 	var _keyChar = '';
 	var _func_keyDown = null;
 	var _func_keyUp = null;
@@ -58,10 +59,10 @@ var RUNPIXIKEY = function()
 	var _func_params_up = null;
 
 	// set that stuff.
-	this.Set = function(keycode, keychar, keydownfunc, keyupfunc)
+	this.Set = function(keychar, iskeycode, keydownfunc, keyupfunc)
 	{
-		_keyCode = keycode;
 		_keyChar = keychar;
+		_isKeyCode = iskeycode;
 		_func_keyDown = keydownfunc;
 		_func_keyUp = keyupfunc;
 	};
@@ -69,12 +70,15 @@ var RUNPIXIKEY = function()
 	this.SetDownFuncParams = function(params) {_func_params_down = params;};
 	this.SetUpFuncParams = function(params) {_func_params_up = params;};
 
+	// return if the event has the given key "activated".
 	var _state = function(e)
 	{
 		var k = String.fromCharCode(e.which);		
 
-		if((_keyCode > 0 && e.keyCode == _keyCode) || 
-		(_keyChar != '' && _keyChar.toLowerCase() == k.toLowerCase()))
+		// 0.5.0 Check for isKeyCode == true instead of keyCode > 0
+		//	.. and use keyChar for keyCode if isKeyCode == true
+		if((_isKeyCode == true && e.keyCode == _keyChar) || 
+		(_isKeyCode == false && _keyChar.toLowerCase() == k.toLowerCase()))
 			return true;
 
 		return false;
@@ -135,14 +139,16 @@ var RUNPIXI = function()
 	var _keys = Array();				// 0.4.0 array with registered keys.
 
 	// 0.4.0 Register a key.
-	this.registerKey = function(keycode, keychar, downfunction, upfunction, downparams, upparams)
-		{return _registerKey(keycode, keychar, downfunction, upfunction, downparams, upparams);};
+	// 0.5.0 Use isKeyCode instead of keyCode
+	this.registerKey = function(keychar, iskeycode, downfunction, upfunction, downparams, upparams)
+		{return _registerKey(keychar, iskeycode, downfunction, upfunction, downparams, upparams);};
 
 	// 0.4.1 Register key in private function.
-	var _registerKey = function(keycode, keychar, downfunction, upfunction, downparams, upparams)
+	// 0.5.0 Use isKeyCode instead of keyCode
+	var _registerKey = function(keychar, iskeycode, downfunction, upfunction, downparams, upparams)
 	{
 		var k = new RUNPIXIKEY();
-		k.Set(keycode, keychar, downfunction, upfunction);
+		k.Set(keychar, iskeycode, downfunction, upfunction);
 		k.SetDownFuncParams(downparams);
 		k.SetUpFuncParams(upparams);
 		_keys.push(k);
@@ -150,7 +156,8 @@ var RUNPIXI = function()
 	};
 
 	// 0.4.1 Register key for scrolling.
-	this.registerScrollKey = function(keycode, keychar, direction)
+	// 0.5.0 Use isKeyCode instead of keyCode
+	this.registerScrollKey = function(keyCharacter, direction, isKeyCode)
 	{
 		var params = new Object();
 		params.direction = 0;
@@ -177,7 +184,7 @@ var RUNPIXI = function()
 			upparams.isVertical = true;
 		};
 
-		_registerKey(keycode, keychar, _scrollHook, _scrollHook, params, upparams);
+		_registerKey(keyCharacter, isKeyCode, _scrollHook, _scrollHook, params, upparams);
 	};
 
 	// 0.4.0 clear all keys.
@@ -460,10 +467,17 @@ RUNPIXI.Scroll_InvertX = true;
 RUNPIXI.Scroll_InvertY = true;
 
 // 0.4.1 register some keys for scrolling.
-RUNPIXI.instance.registerScrollKey(-1,'a','left');
-RUNPIXI.instance.registerScrollKey(-1,'d','right');
-RUNPIXI.instance.registerScrollKey(-1,'w','up');
-RUNPIXI.instance.registerScrollKey(-1,'s','down');
+// 0.5.0 function gets other parameters.
+// ASDW
+RUNPIXI.instance.registerScrollKey('a','left', false);
+RUNPIXI.instance.registerScrollKey('d','right', false);
+RUNPIXI.instance.registerScrollKey('w','up', false);
+RUNPIXI.instance.registerScrollKey('s','down', false);
+// ARROW KEYS
+RUNPIXI.instance.registerScrollKey(37,'left', true);
+RUNPIXI.instance.registerScrollKey(39,'right', true);
+RUNPIXI.instance.registerScrollKey(38,'up', true);
+RUNPIXI.instance.registerScrollKey(40,'down', true);
 
 // 0.4.0 register some keys for scrolling.
 /*RUNPIXI.instance.registerKey(-1,'a',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, -1, 0);
