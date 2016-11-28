@@ -489,16 +489,18 @@ RUNPIXI.Scroll_InvertY = true;
 
 // 0.4.1 register some keys for scrolling.
 // 0.5.0 function gets other parameters.
+// 0.6.0 use control key for scrolling, only arrow keys.
 // ASDW
-RUNPIXI.instance.registerScrollKey('a','left', false, true);
+/*RUNPIXI.instance.registerScrollKey('a','left', false, true);
 RUNPIXI.instance.registerScrollKey('d','right', false, true);
 RUNPIXI.instance.registerScrollKey('w','up', false, true);
 RUNPIXI.instance.registerScrollKey('s','down', false, true);
+*/
 // ARROW KEYS
 RUNPIXI.instance.registerScrollKey(37,'left', true, true);
 RUNPIXI.instance.registerScrollKey(39,'right', true, true);
 RUNPIXI.instance.registerScrollKey(38,'up', true, true);
-RUNPIXI.instance.registerScrollKey(40,'down', true, false);
+RUNPIXI.instance.registerScrollKey(40,'down', true, true);
 
 // 0.4.0 register some keys for scrolling.
 /*RUNPIXI.instance.registerKey(-1,'a',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, -1, 0);

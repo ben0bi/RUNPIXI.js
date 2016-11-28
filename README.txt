@@ -1,6 +1,6 @@
 RUNPIXI.js
 
-WARNING: THIS IS v0.5.0 with
+WARNING: THIS IS v0.6.0 with
 DOCUMENTATION FROM v0.3.5
 Scrolling Doc is not valid anymore.
 + Please be patient. +
@@ -37,7 +37,7 @@ RUNPIXI.initialize("pixiscreen", loopfunction);
 
 That's about it.
 
-The main stage can be scrolled with the arrow keys and asdw.
+The main stage can be scrolled with the (0.6.0: ctrl +) arrow keys and (0.6.0 not) asdw.
 There are more and more functionalities, see the documentation below.
 
 COMPOSER
