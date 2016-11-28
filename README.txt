@@ -1,6 +1,6 @@
 RUNPIXI.js
 
-WARNING: THIS IS v0.6.0 with
+WARNING: THIS IS v0.6.1 with
 DOCUMENTATION FROM v0.3.5
 Scrolling Doc is not valid anymore.
 + Please be patient. +

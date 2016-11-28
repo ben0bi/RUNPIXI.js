@@ -1,4 +1,4 @@
-// v0.6.0 (0.5.0 <= 0.4.1 <= 0.4.0 <= 0.3.5)
+// v0.6.1 (0.6.0 <= 0.5.0 <= 0.4.1 <= 0.4.0 <= 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -35,7 +35,7 @@
 Hierarchy
 	ROOT
 		RBGSTAGE			- fixed
-		RPARALLAXSTAGE 	(RSTAGE)	- moving
+		RSTAGE				- moving
 		RHUDSTAGE			- fixed
 */
 
@@ -449,6 +449,19 @@ var RUNPIXI = function()
 		rtex.destroy();
 		return data;
 	};
+	
+	// 0.6.1: reset scrolling and zooming factor.
+	var _resetScrollRotationZoom = function(unusedparameter)
+	{
+		if(_PIXIScrollStage==null)
+			return;
+		
+		_PIXIScrollStage.position.x = 0;
+		_PIXIScrollStage.position.y = 0;
+		_PIXIScrollStage.rotation = 0;
+		_PIXIScrollStage.scale.x = 1;
+		_PIXIScrollStage.scale.y = 1;
+	}
 
 	// press or release a registered key.
 	var _key = function(event, keystate)
@@ -477,6 +490,9 @@ var RUNPIXI = function()
 	// keydown and keyup.
 	document.addEventListener('keydown', function(e){_key(e,'down');});
 	document.addEventListener('keyup', function(e) {_key(e,'up');});
+	
+	// 0.6.1: ADD Scroll Reset KEY (Ctrl+Enter)
+	_registerKey(13, true, true, _resetScrollRotationZoom, null, null, null);
 
 };
 RUNPIXI.instance = new RUNPIXI();
