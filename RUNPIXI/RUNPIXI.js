@@ -1,4 +1,4 @@
-// v0.5.0 (0.4.1 <= 0.4.0 <= 0.3.5)
+// v0.6.0 (0.5.0 <= 0.4.1 <= 0.4.0 <= 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -57,7 +57,12 @@ var RUNPIXIKEY = function()
 	var _func_keyUp = null;
 	var _func_params_down = null;
 	var _func_params_up = null;
+	// 0.6.0: use control?
+	var _useCtrl = false;
+	var _ctrlPressed = false;
 
+	this.useCtrl = function(v) {_useCtrl=v;};
+	
 	// set that stuff.
 	this.Set = function(keychar, iskeycode, keydownfunc, keyupfunc)
 	{
@@ -74,19 +79,27 @@ var RUNPIXIKEY = function()
 	var _state = function(e)
 	{
 		var k = String.fromCharCode(e.which);		
-
+		
 		// 0.5.0 Check for isKeyCode == true instead of keyCode > 0
 		//	.. and use keyChar for keyCode if isKeyCode == true
 		if((_isKeyCode == true && e.keyCode == _keyChar) || 
 		(_isKeyCode == false && _keyChar.toLowerCase() == k.toLowerCase()))
-			return true;
-
+		{
+			// 0.6.0: use with control key?
+			if((_useCtrl && _ctrlPressed) || !_useCtrl)
+				return true;
+		}
+		
 		return false;
 	};
 
 	// called if a key is pressed down.
 	this.Down = function(event)
 	{
+		// 0.6.0: check for ctrl.
+		if(event.ctrlKey)
+			_ctrlPressed = true;
+		
 		// return if it is not a function.
 		if(typeof(_func_keyDown) !== 'function')
 			return;
@@ -97,6 +110,10 @@ var RUNPIXIKEY = function()
 	// called if a key is released.
 	this.Up = function(event)
 	{
+		// 0.6.0: check for ctrl.
+		if(!event.ctrlKey)
+			_ctrlPressed = false;
+
 		// return if it is not a function.
 		if(typeof(_func_keyUp) !== 'function')
 			return;		
@@ -140,15 +157,18 @@ var RUNPIXI = function()
 
 	// 0.4.0 Register a key.
 	// 0.5.0 Use isKeyCode instead of keyCode
-	this.registerKey = function(keychar, iskeycode, downfunction, upfunction, downparams, upparams)
-		{return _registerKey(keychar, iskeycode, downfunction, upfunction, downparams, upparams);};
+	// 0.6.0: Use ctrl key.
+	this.registerKey = function(keychar, iskeycode, needsCtrl, downfunction, upfunction, downparams, upparams)
+		{return _registerKey(keychar, iskeycode, needsCtrl, downfunction, upfunction, downparams, upparams);};
 
 	// 0.4.1 Register key in private function.
-	// 0.5.0 Use isKeyCode instead of keyCode
-	var _registerKey = function(keychar, iskeycode, downfunction, upfunction, downparams, upparams)
+	// 0.5.0 Use isKeyCode instead of keyCod
+	// 0.6.0: new: use control key.
+	var _registerKey = function(keychar, iskeycode, needsCtrl, downfunction, upfunction, downparams, upparams)
 	{
 		var k = new RUNPIXIKEY();
 		k.Set(keychar, iskeycode, downfunction, upfunction);
+		k.useCtrl(needsCtrl);
 		k.SetDownFuncParams(downparams);
 		k.SetUpFuncParams(upparams);
 		_keys.push(k);
@@ -157,7 +177,8 @@ var RUNPIXI = function()
 
 	// 0.4.1 Register key for scrolling.
 	// 0.5.0 Use isKeyCode instead of keyCode
-	this.registerScrollKey = function(keyCharacter, direction, isKeyCode)
+	// 0.6.0 needs ctrl flag
+	this.registerScrollKey = function(keyCharacter, direction, isKeyCode, needsCtrl)
 	{
 		var params = new Object();
 		params.direction = 0;
@@ -184,7 +205,7 @@ var RUNPIXI = function()
 			upparams.isVertical = true;
 		};
 
-		_registerKey(keyCharacter, isKeyCode, _scrollHook, _scrollHook, params, upparams);
+		_registerKey(keyCharacter, isKeyCode, needsCtrl, _scrollHook, _scrollHook, params, upparams);
 	};
 
 	// 0.4.0 clear all keys.
