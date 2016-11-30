@@ -1,4 +1,4 @@
-// v0.6.1 (0.6.0 <= 0.5.0 <= 0.4.1 <= 0.4.0 <= 0.3.5)
+// v0.6.2 (0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -147,23 +147,23 @@ var RUNPIXI = function()
 
 	// PIXI STUFF
 	// stages
-	var _PIXIRootStage = new PIXI.Container();	// all other stages are childs of the root stage.
-	var _PIXIBackStage = new PIXI.Container();	// the fixed background stage.
+	var _PIXIRootStage = new PIXI.Container();		// all other stages are childs of the root stage.
+	var _PIXIBackStage = new PIXI.Container();		// the fixed background stage.
 	var _PIXIScrollStage = new PIXI.Container();	// the scrolling flexible stage.
-	var _PIXIHUDStage = new PIXI.Container();	// the fixed foreground stage.
+	var _PIXIHUDStage = new PIXI.Container();		// the fixed foreground stage.
 
 	var _shaders = Array();				// array with the shaders.
 	var _keys = Array();				// 0.4.0 array with registered keys.
 
 	// 0.4.0 Register a key.
 	// 0.5.0 Use isKeyCode instead of keyCode
-	// 0.6.0: Use ctrl key.
+	// 0.6.0 Use ctrl key.
 	this.registerKey = function(keychar, iskeycode, needsCtrl, downfunction, upfunction, downparams, upparams)
 		{return _registerKey(keychar, iskeycode, needsCtrl, downfunction, upfunction, downparams, upparams);};
 
 	// 0.4.1 Register key in private function.
-	// 0.5.0 Use isKeyCode instead of keyCod
-	// 0.6.0: new: use control key.
+	// 0.5.0 Use isKeyCode instead of keyCode
+	// 0.6.0 new: use control key.
 	var _registerKey = function(keychar, iskeycode, needsCtrl, downfunction, upfunction, downparams, upparams)
 	{
 		var k = new RUNPIXIKEY();
@@ -461,8 +461,19 @@ var RUNPIXI = function()
 		_PIXIScrollStage.rotation = 0;
 		_PIXIScrollStage.scale.x = 1;
 		_PIXIScrollStage.scale.y = 1;
+		// 0.6.2 also reset pivot.
+		_PIXIScrollStage.pivot.x = 0;
+		_PIXIScrollStage.pivot.y = 0;
 	}
 
+	// 0.6.2: returns the global mouse position as an x,y object.
+	this.GlobalMousePosition = function()
+	{
+		if(_PIXIRenderer!=null)
+			return _PIXIRenderer.plugins.interaction.mouse.global;
+        return {'x':0,'y':0};
+	}
+	
 	// press or release a registered key.
 	var _key = function(event, keystate)
 	{
@@ -517,13 +528,6 @@ RUNPIXI.instance.registerScrollKey(37,'left', true, true);
 RUNPIXI.instance.registerScrollKey(39,'right', true, true);
 RUNPIXI.instance.registerScrollKey(38,'up', true, true);
 RUNPIXI.instance.registerScrollKey(40,'down', true, true);
-
-// 0.4.0 register some keys for scrolling.
-/*RUNPIXI.instance.registerKey(-1,'a',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, -1, 0);
-RUNPIXI.instance.registerKey(-1,'d',RUNPIXI.instance.ScrollX,RUNPIXI.instance.ScrollX, 1, 0);
-RUNPIXI.instance.registerKey(-1,'w',RUNPIXI.instance.ScrollY,RUNPIXI.instance.ScrollY, -1, 0);
-RUNPIXI.instance.registerKey(-1,'s',RUNPIXI.instance.ScrollY,RUNPIXI.instance.ScrollY, 1, 0);
-*/
 // ENDOF Scroll stuff.
 
 // 0.3.2: Return PIXI size.
@@ -566,4 +570,7 @@ RUNPIXI.PIXELATED = function() {PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAR
 // get screen as texture.
 RUNPIXI.GetScreenAsTexture = function(w,h) {return RUNPIXI.instance.getScreenAsTexture(w,h);};
 // ..and as array.
-RUNPIXI.GetScreenAsArray = function(w,h) {return RUNPIXI.instance.getScreenAsArray(w,h);}
+RUNPIXI.GetScreenAsArray = function(w,h) {return RUNPIXI.instance.getScreenAsArray(w,h);};
+
+// 0.6.2 Return global mouse position.
+RUNPIXI.MOUSE = function() {return RUNPIXI.instance.GlobalMousePosition();};
