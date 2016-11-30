@@ -1,10 +1,5 @@
 RUNPIXI.js
 
-WARNING: THIS IS v0.6.2 with
-DOCUMENTATION FROM v0.3.5
-Scrolling Doc is not valid anymore.
-+ Please be patient. +
-
 A library to get PIXI.js to run with ease.
 
 By Beni Yager @ 2016
