@@ -1,4 +1,4 @@
-// v0.6.2 (0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5)
+// v0.6.3 (0.6.2 => 0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -238,7 +238,12 @@ var RUNPIXI = function()
 	};
 	
 	// Initialize PIXI.
-	var _PIXIInitialize = function(pixicontainerID)
+	/* 
+		0.6.3: New backgroundColor (not offensive to older versions.)
+			Use "transparent" for a transparent background.
+			You can use hex colors: 0xRRGGBB (R = Red, G = Green, B = Blue), e.g. 0x00FF00 for full green.
+	*/
+	var _PIXIInitialize = function(pixicontainerID, backgroundColor)
 	{
 		if(document.getElementById(pixicontainerID) == null)
 		{
@@ -253,8 +258,15 @@ var RUNPIXI = function()
 
 			_PIXIWidth = _PIXIDOMScreen.clientWidth;
 			_PIXIHeight = _PIXIDOMScreen.clientHeight;
-		
-			_PIXIRenderer = PIXI.autoDetectRenderer(_PIXIWidth, _PIXIHeight,{backgroundColor : 0x1099bb});
+
+			// 0.6.3 set background color.
+			var transpar = false;
+			var bgcolor = 0x1099bb; // default background color.
+			if(backgroundColor=="transparent")
+				transpar=true;
+			else
+				bgcolor = backgroundColor;
+			_PIXIRenderer = PIXI.autoDetectRenderer(_PIXIWidth, _PIXIHeight,{backgroundColor : bgcolor, transparent : transpar});
 			_PIXIDOMScreen.appendChild(_PIXIRenderer.view);
 						
 			// create hierarchy
@@ -268,7 +280,13 @@ var RUNPIXI = function()
 			console.log("PIXI Screen already initialized.");
 		}
 	};
-	this.initialize = function(pixicontainerID) {_PIXIInitialize(pixicontainerID);};
+	// 0.6.3 new: backgroundColor, non offensive to older versions.
+	this.initialize = function(pixicontainerID, backgroundColor) {
+		if(backgroundColor)
+			_PIXIInitialize(pixicontainerID, backgroundColor);
+		else
+			_PIXIInitialize(pixicontainerID, 0x1099bb);
+	};
 
 // 0.4.0
 // NEW SCROLLING ENGINE
@@ -558,9 +576,13 @@ RHUDSTAGE = function() {return RUNPIXI.instance.HUDSTAGE();};
 RUNPIXI.RENDERER = function() {return RUNPIXI.instance.RENDERER();};
 
 // the MAIN function. ;)
-RUNPIXI.initialize = function(pixicontainerID, mainLoopFunction) 
+// 0.6.3: new backgroundColor, non offensive to older versions.
+RUNPIXI.initialize = function(pixicontainerID, mainLoopFunction, backgroundColor) 
 {
-	RUNPIXI.instance.initialize(pixicontainerID);
+	if(backgroundColor)
+		RUNPIXI.instance.initialize(pixicontainerID, backgroundColor);
+	else	
+		RUNPIXI.instance.initialize(pixicontainerID);
 	RUNPIXI.instance.setMainLoopFunction(mainLoopFunction);
 };
 

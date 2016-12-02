@@ -28,6 +28,11 @@ Create a loop function and call initialize:
 <script>
 function loopfunction() {}
 RUNPIXI.initialize("pixiscreen", loopfunction);
+
+// OR: RUNPIXI.initialize("pixiscreen", loopfunction, 0xRRGGBB)
+//     where 0xRRGGBB is your background color in RedGreenBlue-Hex.
+// OR: RUNPIXI.initialize("pixiscreen", loopfunction, "transparent")
+
 </script>
 
 That's about it.
@@ -65,6 +70,7 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
+0.6.3 + Set background color to your desired value or to transparent. Finally.
 0.6.2 + Return global mouse position with RUNPIXI.instance.GlobalMousePosition().x/y or RUNPIXI.MOUSE().x/y
 0.6.1 + Reset scroll, zoom and rotation factor with Ctrl+Enter.
 0.6.0
@@ -126,10 +132,11 @@ RUNPIXI.Scroll_InvertY	: true|false : Invert the scrollrate vertically.
 GLOBAL FUNCTIONS
 ----------------
 
-RUNPIXI.initialize(pixicontainerID, mainLoopFunction)
+RUNPIXI.initialize(pixicontainerID, mainLoopFunction, [backgroundColor])
 	Parameters:
 		pixicontainerID: The id of the DOM element where pixi should be rendered.
 		mainLoopFunction: The function which should be called each frame.
+		backgroundColor: Optional: Hex Color (0xRRGGBB) or "transparent"
 	+ Initializes the pixi screen in the given DOM element and sets the main loop function.
 		This is the function for what this library is made for.
 	--> See RUNPIXI.instance.initialize and RUNPIXI.instance.setMainLoopFunction
