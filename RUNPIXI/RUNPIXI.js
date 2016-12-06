@@ -172,6 +172,18 @@ var RUNPIXI = function()
 			globalBX1 = 0;
 
 	};
+
+	// center screen along boundaries on the x position.
+        var _centerScreenX=function()
+        {
+		if(boundarX1 == 'not set' || boundarX2 == 'not set')
+			return;
+        	// center the screen.
+                var sc=RUNPIXI.getScreenSize();
+                var sw = sc.w - boundarX2 - boundarX1;
+                RSTAGE().position.x = sw *0.5;
+        };
+	this.centerScreenX=function() {_centerScreenX();};
 	// ENDOF 0.6.4
 
 	// this function is called each frame.
@@ -521,6 +533,9 @@ var RUNPIXI = function()
 		// 0.6.2 also reset pivot.
 		_PIXIScrollStage.pivot.x = 0;
 		_PIXIScrollStage.pivot.y = 0;
+
+		// 0.6.4 Center screen if boundaries are set. (horizontally)
+		_centerScreenX();		
 	}
 
 	// 0.6.2: returns the global mouse position as an x,y object.
