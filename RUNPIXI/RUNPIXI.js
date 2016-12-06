@@ -1,4 +1,4 @@
-// v0.6.3 (0.6.2 => 0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5)
+// v0.6.4 (0.6.3 => 0.6.2 => 0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -60,7 +60,6 @@ var RUNPIXIKEY = function()
 	// 0.6.0: use control?
 	var _useCtrl = false;
 	var _ctrlPressed = false;
-
 	this.useCtrl = function(v) {_useCtrl=v;};
 	
 	// set that stuff.
@@ -124,7 +123,57 @@ var RUNPIXIKEY = function()
 // ENDOF 0.4.0
 
 var RUNPIXI = function()
-{	
+{
+	// PIXI STUFF
+	// stages
+	var _PIXIRootStage = new PIXI.Container();	// all other stages are childs of the root stage.
+	var _PIXIBackStage = new PIXI.Container();	// the fixed background stage.
+	var _PIXIScrollStage = new PIXI.Container();	// the scrolling flexible stage.
+	var _PIXIHUDStage = new PIXI.Container();	// the fixed foreground stage.
+
+	var _shaders = Array();				// array with the shaders.
+	var _keys = Array();				// 0.4.0 array with registered keys.
+
+	// 0.6.4: Scroll boundaries (local space on RSTAGE, converted to global space.)
+	var boundarX1 = 'not set';
+	var boundarX2 = 'not set';
+	var boundarY1 = 'not set';
+	var boundarY2 = 'not set';
+	this.setScrollBoundaries = function(x1,y1, x2, y2)
+	{
+		boundarX1 = x1;
+		boundarX2 = x2;
+		boundarY1 = y1;
+		boundarY2 = y2;
+	};
+
+	this.getScrollBoundaries = function() 
+	{
+		var result=Array();
+		result[0]=result["x1"]=result["X1"]=boundarX1;
+		result[1]=result["x2"]=result["X2"]=boundarX2;
+		result[2]=result["y1"]=result["Y1"]=boundarY1;
+		result[3]=result["y2"]=result["Y2"]=boundarY2;
+		return result;
+	};
+
+	var updateScrollBoundaries = function()
+	{
+		if(_PIXIScrollStage==null)
+			return;
+
+		var globalBX1 = boundarX1;
+		var globalBX2 = boundarX2;
+		var globalBY1 = boundarY1;
+		var globalBY2 = boundarY2;
+
+		// TODO: CONTINUE HERE XHEREX
+		if(globalBX1 != 'not set')
+			globalBX1 = 0;
+
+	};
+	// ENDOF 0.6.4
+
 	// this function is called each frame.
 	var _MainLoopFunction = function() {};
 	this.setMainLoopFunction = function(m)
@@ -144,16 +193,6 @@ var RUNPIXI = function()
 		else
 			console.log("ERROR: RUNPIXI.setResizeMethod needs a function as parameter.");
 	};
-
-	// PIXI STUFF
-	// stages
-	var _PIXIRootStage = new PIXI.Container();		// all other stages are childs of the root stage.
-	var _PIXIBackStage = new PIXI.Container();		// the fixed background stage.
-	var _PIXIScrollStage = new PIXI.Container();	// the scrolling flexible stage.
-	var _PIXIHUDStage = new PIXI.Container();		// the fixed foreground stage.
-
-	var _shaders = Array();				// array with the shaders.
-	var _keys = Array();				// 0.4.0 array with registered keys.
 
 	// 0.4.0 Register a key.
 	// 0.5.0 Use isKeyCode instead of keyCode
@@ -268,7 +307,7 @@ var RUNPIXI = function()
 				bgcolor = backgroundColor;
 			_PIXIRenderer = PIXI.autoDetectRenderer(_PIXIWidth, _PIXIHeight,{backgroundColor : bgcolor, transparent : transpar});
 			_PIXIDOMScreen.appendChild(_PIXIRenderer.view);
-						
+
 			// create hierarchy
 			_PIXIRootStage.addChild(_PIXIBackStage);
 			_PIXIRootStage.addChild(_PIXIScrollStage);
@@ -508,7 +547,7 @@ var RUNPIXI = function()
 	window.addEventListener('resize', function(event){
 		if(_PIXIDOMScreen==null || _PIXIRenderer==null)
 			return;
-		
+
 		_PIXIWidth = _PIXIDOMScreen.clientWidth;
 		_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
