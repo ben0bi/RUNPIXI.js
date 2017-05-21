@@ -563,8 +563,8 @@ var RUNPIXI = function()
 		if(_PIXIDOMScreen==null || _PIXIRenderer==null)
 			return;
 
-		_PIXIWidth = parseInt(_PIXIDOMScreen.clientWidth);
-		_PIXIHeight = parseInt(_PIXIDOMScreen.clientHeight);
+		_PIXIWidth = _PIXIDOMScreen.clientWidth;
+		_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
 		if(typeof(_resizeFunction) === 'function')
 			_resizeFunction(event);
