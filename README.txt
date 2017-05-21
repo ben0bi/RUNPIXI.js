@@ -70,6 +70,7 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
+0.6.4 + Center the screen horizontally and something with scroll boundaries.
 0.6.3 + Set background color to your desired value or to transparent. Finally.
 0.6.2 + Return global mouse position with RUNPIXI.instance.GlobalMousePosition().x/y or RUNPIXI.MOUSE().x/y
 0.6.1 + Reset scroll, zoom and rotation factor with Ctrl+Enter.
