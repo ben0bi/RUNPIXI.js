@@ -1,4 +1,4 @@
-// v0.6.4 (0.6.3 => 0.6.2 => 0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5)
+// v0.6.5 (v0.6.4 => 0.6.3 => 0.6.2 => 0.6.1 => 0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5 => ???)
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
 
@@ -135,6 +135,7 @@ var RUNPIXI = function()
 	var _keys = Array();				// 0.4.0 array with registered keys.
 
 	// 0.6.4: Scroll boundaries (local space on RSTAGE, converted to global space.)
+	// NOT FUNCTIONAL, only used for centering the screen.
 	var boundarX1 = 'not set';
 	var boundarX2 = 'not set';
 	var boundarY1 = 'not set';
@@ -157,6 +158,7 @@ var RUNPIXI = function()
 		return result;
 	};
 
+	/*
 	var updateScrollBoundaries = function()
 	{
 		if(_PIXIScrollStage==null)
@@ -172,17 +174,17 @@ var RUNPIXI = function()
 			globalBX1 = 0;
 
 	};
-
+*/
 	// center screen along boundaries on the x position.
-        var _centerScreenX=function()
-        {
+	var _centerScreenX=function()
+    {
 		if(boundarX1 == 'not set' || boundarX2 == 'not set')
 			return;
-        	// center the screen.
-                var sc=RUNPIXI.getScreenSize();
-                var sw = sc.w - boundarX2 - boundarX1;
-                RSTAGE().position.x = sw *0.5;
-        };
+        // center the screen.
+        var sc=RUNPIXI.getScreenSize();
+        var sw = sc.w - boundarX2 - boundarX1;
+        RSTAGE().position.x = sw *0.5;
+	};
 	this.centerScreenX=function() {_centerScreenX();};
 	// ENDOF 0.6.4
 
@@ -314,9 +316,12 @@ var RUNPIXI = function()
 			var transpar = false;
 			var bgcolor = 0x1099bb; // default background color.
 			if(backgroundColor=="transparent")
-				transpar=true;
-			else
-				bgcolor = backgroundColor;
+			{
+				bgcolor = 0x000000;
+                transpar = true;
+            }else {
+                bgcolor = backgroundColor;
+            }
 			_PIXIRenderer = PIXI.autoDetectRenderer(_PIXIWidth, _PIXIHeight,{backgroundColor : bgcolor, transparent : transpar});
 			_PIXIDOMScreen.appendChild(_PIXIRenderer.view);
 
@@ -420,7 +425,7 @@ var RUNPIXI = function()
 		_PIXIScrollStage.position.x += _ScrollRateX;
 		_PIXIScrollStage.position.y += _ScrollRateY;		
 	};
-// ENDOF NEW
+// ENDOF NEW SCROLL ENGINE.
 	
 	// create and return a sprite
 	this.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex,scaley)
@@ -450,12 +455,50 @@ var RUNPIXI = function()
 		console.log("RUNPIXI: Vertex shader {"+name+"} created."); 
 		return _shaders[name];
 	};
-	this.GetShader = function(name) {return _shaders[name];};
+
+	// 0.6.5 Create a hard coded colour overlay shader.
+	// it is named "sh_color_"+myColor (like: "sh_color_"+0xFFFFFF for full white)
+    this.CreateColorShader = function(hexColor)
+    {
+        var shader = RUNPIXI.GetShader('sh_color_'+hexColor);
+        if(shader==null)
+        {
+            // shader does not exist, create it.
+            var shCode = "precision mediump float;varying vec2 vTextureCoord;uniform sampler2D uSampler;";
+            shCode += "void main(){gl_FragColor=texture2D(uSampler,vTextureCoord);";
+            shCode += "if(gl_FragColor.r==0.0 && gl_FragColor.g==0.0 && gl_FragColor.b==0.0){return;}";
+            shCode += "gl_FragColor.r="+ getRedFromHex_normalized(hexColor) + ";";
+            shCode += "gl_FragColor.g="+ getGreenFromHex_normalized(hexColor) + ";";
+            shCode += "gl_FragColor.b="+ getBlueFromHex_normalized(hexColor) + ";";
+            shCode += "}";
+            return RUNPIXI.CreateFragmentShader('sh_color_' + hexColor, shCode);
+        }
+		return false;
+    };
+
+    this.GetShader = function(name) {return _shaders[name];};
+	// pre-0.6.5 -> Set shader to shader variable.
 	this.ApplyShader = function(pixiSprite, shaderName) 
 	{
 		var shader = this.GetShader(shaderName);
 		if(shader)
-			pixiSprite.shader = shader;
+		{
+            pixiSprite.shader = shader;
+            return true;
+        }
+        return false;
+	};
+
+	// 0.6.5 -> Set shader to filters array.
+	this.ApplyFilter =function(pixiSprite, shaderName)
+	{
+		var shader= this.GetShader(shaderName);
+		if(shader)
+		{
+			pixiSprite.filters = [shader];
+            return true;
+        }
+		return false;
 	};
 
 	// render the screen to a texture and return that.
@@ -536,7 +579,7 @@ var RUNPIXI = function()
 
 		// 0.6.4 Center screen if boundaries are set. (horizontally)
 		_centerScreenX();		
-	}
+	};
 
 	// 0.6.2: returns the global mouse position as an x,y object.
 	this.GlobalMousePosition = function()
@@ -544,7 +587,7 @@ var RUNPIXI = function()
 		if(_PIXIRenderer!=null)
 			return _PIXIRenderer.plugins.interaction.mouse.global;
         return {'x':0,'y':0};
-	}
+	};
 	
 	// press or release a registered key.
 	var _key = function(event, keystate)
@@ -615,6 +658,10 @@ RUNPIXI.CreateFragmentShader = function(name, shadercode) {return RUNPIXI.instan
 RUNPIXI.CreateVertexShader = function(name, shadercode) {return RUNPIXI.instance.CreateVertexShader(name,shadercode);};
 RUNPIXI.ApplyShader = function(pixiSprite, shaderName) {return RUNPIXI.instance.ApplyShader(pixiSprite,shaderName);};
 RUNPIXI.GetShader = function(name) {return RUNPIXI.instance.GetShader(name);};
+// 0.6.5 Create a color shader.
+RUNPIXI.CreateColorShader = function(hexColor) {return RUNPIXI.instance.CreateColorShader(hexColor);};
+// 0.6.5 apply the shader to the filters array.
+RUNPIXI.ApplyFilter = function(pixiSprite, shaderName) {return RUNPIXI.instance.ApplyFilter(pixiSprite,shaderName);};
 
 // shorts to the stages.
 RUNPIXI.STAGE = function() {return RUNPIXI.instance.SCROLLSTAGE();};
@@ -650,3 +697,10 @@ RUNPIXI.GetScreenAsArray = function(w,h) {return RUNPIXI.instance.getScreenAsArr
 
 // 0.6.2 Return global mouse position.
 RUNPIXI.MOUSE = function() {return RUNPIXI.instance.GlobalMousePosition();};
+
+// 0.6.5 Get Some colour values.
+function getRedFromHex_normalized(hexColor) {var r =((1.0 / 0xFF) * ((hexColor >> 16) & 0xFF)); return r.toFixed(4);}
+function getGreenFromHex_normalized(hexColor) {var g=((1.0 / 0xFF) * ((hexColor >> 8) & 0xFF)); return g.toFixed(4);}
+function getBlueFromHex_normalized(hexColor) {var b=((1.0 / 0xFF) * (hexColor  & 0xFF));return b.toFixed(4);}
+
+console.log("RUNPIXI.js loaded.");

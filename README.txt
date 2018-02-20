@@ -70,7 +70,8 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
-0.6.4 + Center the screen horizontally and something with scroll boundaries.
+0.6.5 + New function ApplyFilter and CreateColorShader which creates a simple colouring (used for whitening some stuff for tilting it afterwards.)
+0.6.4 + Center the screen horizontally and something with scroll boundaries (which is not functional yet).
 0.6.3 + Set background color to your desired value or to transparent. Finally.
 0.6.2 + Return global mouse position with RUNPIXI.instance.GlobalMousePosition().x/y or RUNPIXI.MOUSE().x/y
 0.6.1 + Reset scroll, zoom and rotation factor with Ctrl+Enter.
@@ -257,11 +258,22 @@ RUNPIXI.instance.CreateVertexShader(name, shadercode)
 	+ Creates a vertex shader, saves it under the given name 
 		in RUNPIXIs shader list and returns it.
 
+RUNPIXI.instance.ApplyFilter(pixiSprite, shaderName)
+	Parameters:
+		pixiSprite : Any PIXI object which has a .filters variable. (NOT shader!)
+		shaderName : The name of the shader in RUNPIXIs shader list.
+	+ Applies the given shader to filters of the given PIXI object. NO type comparison is done, be careful.
+
 RUNPIXI.instance.ApplyShader(pixiSprite, shaderName)
 	Parameters:
 		pixiSprite : Any PIXI object which has a .shader variable. (NOT filters!)
 		shaderName : The name of the shader in RUNPIXIs shader list.
-	+ Applies the given shader to the given PIXI object. NO type comparison is done, be carefull.
+	+ Applies the given shader to the given PIXI object. NO type comparison is done, be careful.
+
+RUNPIXI.instance.CreateColorShader(hexColor)
+	Parameters:
+		hexColor : A color in the form 0xRRGGBB.
+	+ Creates a colouring shader with the given color. The name is sh_color_yourcolor. Just use the color you gave for the name, too.
 
 RUNPIXI.instance.GetShader(name)
 	Parameters:
