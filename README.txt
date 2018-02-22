@@ -70,7 +70,12 @@ Now you can load RUNPIXI by typing "composer update" into your console.
 
 CHANGES
 -------
-0.6.5 + New function ApplyFilter and CreateColorShader which creates a simple colouring (used for whitening some stuff for tilting it afterwards.)
+0.6.5 
++ New function ApplyFilter
++ New function CreateColorShader which creates a simple colouring (used for whitening some stuff for tilting it afterwards.)
++ New function getRedFromHex_normalized, gets a value between 0.0 and 1.0 from an RGB hex value like 0xFF0033.
++ New function getGreenFromHex_normalized
++ New function getBlueFromHex_normalized
 0.6.4 + Center the screen horizontally and something with scroll boundaries (which is not functional yet).
 0.6.3 + Set background color to your desired value or to transparent. Finally.
 0.6.2 + Return global mouse position with RUNPIXI.instance.GlobalMousePosition().x/y or RUNPIXI.MOUSE().x/y
@@ -133,6 +138,15 @@ RUNPIXI.Scroll_InvertY	: true|false : Invert the scrollrate vertically.
 
 GLOBAL FUNCTIONS
 ----------------
+
+getRedFromHex_normalized(hexColor)
+getGreenFromHex_normalized(hexColor)
+getBlueFromHex_normalized(hexColor)
+	Parameter: 
+		hexColor: A color in the format 0xRRGGBB (Red, Green, Blue)
+	+ Gets the normalized value from the hexColor, that is 0.0 for 0x00
+	  to 1.0 for 0xFF. 
+	  e.G. getRedFromHex_normalized(0xFF99AA) returns 1.0
 
 RUNPIXI.initialize(pixicontainerID, mainLoopFunction, [backgroundColor])
 	Parameters:

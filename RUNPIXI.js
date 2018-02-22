@@ -7,7 +7,7 @@
 			The BACKSTAGE is fixed and used for backgrounds like sky images.
 			The SCROLLSTAGE is the main stage, it can be easily scrolled.
 			The HUDSTAGE is the most foreground stage, also fixed, used for menus and HUD.
-	
+
 	Usage:
 		<div id="mypixiscreen" style="width: XXXpx; height: YYYpx"></div>
 		<script>
@@ -15,12 +15,12 @@
 			{
 				// add your loop stuff here.
 			}
-			
+
 			// you need only this single line of code to make pixi run inside your div.
 			RUNPIXI.initialize("mypixiscreen", loopfunction);
 
 			// Additional Stuff:
-		
+
 			// get access to the main stage with RSTAGE(), RUNPIXI.STAGE() or RUNPIXI.instance.SCROLLSTAGE().
 			// RBACKSTAGE(), RUNPIXI.BACKSTAGE() or RUNPIXI.instance.BACKSTAGE() for the background stage.
 			// RHUDSTAGE(), RUNPIXI.HUDSTAGE() or RUNPIXI.instance.HUDSTAGE() for the foreground stage.		
@@ -61,7 +61,7 @@ var RUNPIXIKEY = function()
 	var _useCtrl = false;
 	var _ctrlPressed = false;
 	this.useCtrl = function(v) {_useCtrl=v;};
-	
+
 	// set that stuff.
 	this.Set = function(keychar, iskeycode, keydownfunc, keyupfunc)
 	{
@@ -77,8 +77,8 @@ var RUNPIXIKEY = function()
 	// return if the event has the given key "activated".
 	var _state = function(e)
 	{
-		var k = String.fromCharCode(e.which);		
-		
+		var k = String.fromCharCode(e.which);
+
 		// 0.5.0 Check for isKeyCode == true instead of keyCode > 0
 		//	.. and use keyChar for keyCode if isKeyCode == true
 		if((_isKeyCode == true && e.keyCode == _keyChar) || 
@@ -88,7 +88,7 @@ var RUNPIXIKEY = function()
 			if((_useCtrl && _ctrlPressed) || !_useCtrl)
 				return true;
 		}
-		
+
 		return false;
 	};
 
@@ -98,7 +98,7 @@ var RUNPIXIKEY = function()
 		// 0.6.0: check for ctrl.
 		if(event.ctrlKey)
 			_ctrlPressed = true;
-		
+
 		// return if it is not a function.
 		if(typeof(_func_keyDown) !== 'function')
 			return;
@@ -115,7 +115,7 @@ var RUNPIXIKEY = function()
 
 		// return if it is not a function.
 		if(typeof(_func_keyUp) !== 'function')
-			return;		
+			return;
 		if(_state(event)==true)
 			_func_keyUp(_func_params_up);
 	};
@@ -289,9 +289,9 @@ var RUNPIXI = function()
 		_ScrollUpdate();
 		_PIXIRenderer.render(_PIXIRootStage);
 	};
-	
+
 	// Initialize PIXI.
-	/* 
+	/*
 		0.6.3: New backgroundColor (not offensive to older versions.)
 			Use "transparent" for a transparent background.
 			You can use hex colors: 0xRRGGBB (R = Red, G = Green, B = Blue), e.g. 0x00FF00 for full green.
@@ -303,7 +303,7 @@ var RUNPIXI = function()
 			console.log("ERROR: DOM element for PIXI screen not found. Aborting!");
 			return;
 		}
-		
+
 		// just initialize it once.
 		if(_PIXIDOMScreen == null || _PIXIRenderer == null)
 		{
@@ -350,11 +350,11 @@ var RUNPIXI = function()
 	var _ScrollDirY = 0; // -1, 0, 1
 	var _ScrollRateX = 0;
 	var _ScrollRateY = 0;
-	
+
 	this.ScrollX= function(direction) {_scrollActivate(direction, false);};
 	this.ScrollY= function(direction) {_scrollActivate(direction, true);};
 
-	// 0.4.1 Hook for the registerscrollkeys function.	
+	// 0.4.1 Hook for the registerscrollkeys function.
 	var _scrollHook = function(params)
 	{
 		// params needs .direction and .isVertical
@@ -367,10 +367,10 @@ var RUNPIXI = function()
 		if((RUNPIXI.Scroll_InvertX == true && isvertical == false) ||
 		(RUNPIXI.Scroll_InvertY == true && isvertical == true))
 			direction = -direction;
-	
+
 		// get the right value
 		var v = _ScrollDirX;
-		if(isvertical) 
+		if(isvertical)
 			v = _ScrollDirY;
 
 		// process
@@ -393,7 +393,7 @@ var RUNPIXI = function()
 	{
 		var v = _ScrollDirX;
 		var r = _ScrollRateX;
-		if(isvertical) 
+		if(isvertical)
 		{
 			v = _ScrollDirY;
 			r = _ScrollRateY;
@@ -423,10 +423,10 @@ var RUNPIXI = function()
 		_scrollIt(true);
 
 		_PIXIScrollStage.position.x += _ScrollRateX;
-		_PIXIScrollStage.position.y += _ScrollRateY;		
+		_PIXIScrollStage.position.y += _ScrollRateY;
 	};
 // ENDOF NEW SCROLL ENGINE.
-	
+
 	// create and return a sprite
 	this.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex,scaley)
 	{
@@ -443,16 +443,16 @@ var RUNPIXI = function()
 
 	// shader stuff.
 	// WARNING: It uses the .shader variable, not the .filters array!
-	this.CreateFragmentShader = function(name, shadercode) 
+	this.CreateFragmentShader = function(name, shadercode)
 	{
 		_shaders[name] = new PIXI.AbstractFilter('', shadercode);
 		console.log("RUNPIXI: Fragment shader {"+name+"} created.");
 		return _shaders[name];
 	};
-	this.CreateVertexShader = function(name, shadercode) 
+	this.CreateVertexShader = function(name, shadercode)
 	{
 		_shaders[name] = new PIXI.AbstractFilter(shadercode, '');
-		console.log("RUNPIXI: Vertex shader {"+name+"} created."); 
+		console.log("RUNPIXI: Vertex shader {"+name+"} created.");
 		return _shaders[name];
 	};
 
@@ -478,7 +478,7 @@ var RUNPIXI = function()
 
     this.GetShader = function(name) {return _shaders[name];};
 	// pre-0.6.5 -> Set shader to shader variable.
-	this.ApplyShader = function(pixiSprite, shaderName) 
+	this.ApplyShader = function(pixiSprite, shaderName)
 	{
 		var shader = this.GetShader(shaderName);
 		if(shader)
@@ -496,8 +496,8 @@ var RUNPIXI = function()
 		if(shader)
 		{
 			pixiSprite.filters = [shader];
-            return true;
-        }
+            		return true;
+        	}
 		return false;
 	};
 
@@ -514,7 +514,7 @@ var RUNPIXI = function()
 			renderWidth = renderer.width;
 		if(renderHeight <= 0)
 			renderHeight = renderer.height;
-		
+
 		// compute scaling factor.
 		var scale = 1;
 		var sc = renderWidth;
@@ -537,7 +537,7 @@ var RUNPIXI = function()
 		sprite.scale.x = scale;
 		sprite.scale.y = scale;
 		stage.addChild(sprite);
-		
+
 		// render the original again in scaled mode.
 		var renderTex = new PIXI.RenderTexture(renderer, renderWidth, renderHeight);
 		renderTex.render(stage);
@@ -561,13 +561,13 @@ var RUNPIXI = function()
 		rtex.destroy();
 		return data;
 	};
-	
+
 	// 0.6.1: reset scrolling and zooming factor.
 	var _resetScrollRotationZoom = function(unusedparameter)
 	{
 		if(_PIXIScrollStage==null)
 			return;
-		
+
 		_PIXIScrollStage.position.x = 0;
 		_PIXIScrollStage.position.y = 0;
 		_PIXIScrollStage.rotation = 0;
@@ -578,7 +578,7 @@ var RUNPIXI = function()
 		_PIXIScrollStage.pivot.y = 0;
 
 		// 0.6.4 Center screen if boundaries are set. (horizontally)
-		_centerScreenX();		
+		_centerScreenX();
 	};
 
 	// 0.6.2: returns the global mouse position as an x,y object.
@@ -588,7 +588,7 @@ var RUNPIXI = function()
 			return _PIXIRenderer.plugins.interaction.mouse.global;
         return {'x':0,'y':0};
 	};
-	
+
 	// press or release a registered key.
 	var _key = function(event, keystate)
 	{
@@ -616,7 +616,7 @@ var RUNPIXI = function()
 	// keydown and keyup.
 	document.addEventListener('keydown', function(e){_key(e,'down');});
 	document.addEventListener('keyup', function(e) {_key(e,'up');});
-	
+
 	// 0.6.1: ADD Scroll Reset KEY (Ctrl+Enter)
 	_registerKey(13, true, true, _resetScrollRotationZoom, null, null, null);
 
@@ -682,7 +682,7 @@ RUNPIXI.initialize = function(pixicontainerID, mainLoopFunction, backgroundColor
 {
 	if(backgroundColor)
 		RUNPIXI.instance.initialize(pixicontainerID, backgroundColor);
-	else	
+	else
 		RUNPIXI.instance.initialize(pixicontainerID);
 	RUNPIXI.instance.setMainLoopFunction(mainLoopFunction);
 };
