@@ -1,8 +1,20 @@
+       __________________________
+      /    _____   _   _______   \
+     / o  |  ___| | | |__   __| o \
+     |    | |  _  | |    | |      |
+     |    | |_| | | |    | |      |
+     \ o  |_____| |_|    |_|    o /
+      \__________________________/
+   __________________________________
+  /                                  \
+ (o Grenchen Institute of Technology o)
+  \__________________________________/
+
 RUNPIXI.js
 
 A library to get PIXI.js to run with ease.
 
-By Beni Yager @ 2016
+By Beni Yager @ 2016, 2017, 2018
 
 Needs pixi.js.
 http://www.pixijs.com/
