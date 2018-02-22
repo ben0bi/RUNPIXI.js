@@ -127,7 +127,7 @@ They are attached to the root stage (which RUNPIXI also creates):
 	+ A scrollable main stage (Main/Scroll)
 	+ and an immobile background stage. (Background)
 
-ISSUE: Background color is fixed right now.
+ISSUE: v0.6.4 is not done yet.
 
 GLOBAL VARIABLES
 ----------------
