@@ -12,6 +12,9 @@
 
 RUNPIXI.js
 
+Version B. Working on it.
+Checkout the branch "Version_A" for the old, stable version.
+
 A library to get PIXI.js to run with ease.
 
 By Beni Yager @ 2016, 2017, 2018
