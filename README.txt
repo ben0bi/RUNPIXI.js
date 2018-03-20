@@ -12,6 +12,9 @@
 
 RUNPIXI.js
 
+Version A - not implemented into PIXI itself.
+(latest: 0.6.5)
+
 A library to get PIXI.js to run with ease.
 
 By Beni Yager @ 2016, 2017, 2018
