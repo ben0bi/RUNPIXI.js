@@ -126,7 +126,7 @@ var RUNPIXI = function()
 {
 	// PIXI STUFF
 	// stages
-	var _PIXIRootStage = new PIXI.Container();	// all other stages are childs of the root stage.
+	var _PIXIRootStage = new PIXI.Container();	// DONE all other stages are childs of the root stage.
 	var _PIXIBackStage = new PIXI.Container();	// the fixed background stage.
 	var _PIXIScrollStage = new PIXI.Container();	// the scrolling flexible stage.
 	var _PIXIHUDStage = new PIXI.Container();	// the fixed foreground stage.
@@ -188,7 +188,7 @@ var RUNPIXI = function()
 	this.centerScreenX=function() {_centerScreenX();};
 	// ENDOF 0.6.4
 
-	// this function is called each frame.
+	// DONE this function is called each frame.
 	var _MainLoopFunction = function() {};
 	this.setMainLoopFunction = function(m)
 	{
@@ -198,7 +198,7 @@ var RUNPIXI = function()
 			console.log("ERROR: RUNPIXI.setMainLoopMethod needs a function as parameter.");
 	};
 
-	// this is called after resize.	
+	// DONE this is called after resize.	
 	var _resizeFunction = null;
 	this.setResizeFunction = function(m)
 	{
@@ -268,7 +268,7 @@ var RUNPIXI = function()
 	this.SCROLLSTAGE = function() {return _PIXIScrollStage;};
 	this.HUDSTAGE = function() {return _PIXIHUDStage;};
 
-	// ground work
+	// DONE ground work
 	var _PIXIRenderer = null;
 	// 0.3.3: get renderer
 	this.RENDERER = function() {return _PIXIRenderer;};
@@ -277,10 +277,10 @@ var RUNPIXI = function()
 	var _PIXIWidth = 0;
 	var _PIXIHeight = 0;
 
-	// 0.3.2: Return screen size.
+	// DONE 0.3.2: Return screen size.
 	this.getScreenSize = function() {var o=new Object();o.x = _PIXIWidth;o.w = _PIXIWidth; o.y=_PIXIHeight; o.h=_PIXIHeight; return o;}
 
-	// render function.
+	// DONE render function.
 	// _MainLoopFunction is "your" function.
 	var _PIXILoopMethod = function()
 	{
@@ -290,7 +290,7 @@ var RUNPIXI = function()
 		_PIXIRenderer.render(_PIXIRootStage);
 	};
 
-	// Initialize PIXI.
+	// DONE Initialize PIXI.
 	/*
 		0.6.3: New backgroundColor (not offensive to older versions.)
 			Use "transparent" for a transparent background.
@@ -336,7 +336,7 @@ var RUNPIXI = function()
 			console.log("PIXI Screen already initialized.");
 		}
 	};
-	// 0.6.3 new: backgroundColor, non offensive to older versions.
+	// DONE 0.6.3 new: backgroundColor, non offensive to older versions.
 	this.initialize = function(pixicontainerID, backgroundColor) {
 		if(backgroundColor)
 			_PIXIInitialize(pixicontainerID, backgroundColor);
@@ -601,7 +601,7 @@ var RUNPIXI = function()
 		};
 	};
 
-	// resize renderer if size changes.
+	// DONE resize renderer if size changes.
 	window.addEventListener('resize', function(event){
 		if(_PIXIDOMScreen==null || _PIXIRenderer==null)
 			return;
@@ -621,6 +621,7 @@ var RUNPIXI = function()
 	_registerKey(13, true, true, _resetScrollRotationZoom, null, null, null);
 
 };
+// DONE
 RUNPIXI.instance = new RUNPIXI();
 
 // SCROLL stuff
@@ -645,7 +646,7 @@ RUNPIXI.instance.registerScrollKey(38,'up', true, true);
 RUNPIXI.instance.registerScrollKey(40,'down', true, true);
 // ENDOF Scroll stuff.
 
-// 0.3.2: Return PIXI size.
+// 0.3.2: DONE Return PIXI size.
 RUNPIXI.getScreenSize = function() {return RUNPIXI.instance.getScreenSize();}
 
 // create sprite with position, rotation, anchor and size.
