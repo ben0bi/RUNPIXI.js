@@ -82,7 +82,7 @@ var RUNPIXI = function()
 		if(typeof(m) === 'function')
 		{
 			_onFrameUpdateFunction = m;
-			Rlog("[ OK ] RUNPIXI got an onFrameUpdateFunction function.");
+			Rlog("[ OK ] RUNPIXI got an onFrameUpdate callback function.");
 		}else{
 			Rlog("[!ERR] RUNPIXI.setOnFrameUpdateFunction needs a function as parameter.");
 		}	
@@ -93,7 +93,7 @@ var RUNPIXI = function()
 		if(typeof(m) === 'function')
 		{
 			_onResizeFunction = m;
-			Rlog("[ OK ] RUNPIXI got an onResize function.");
+			Rlog("[ OK ] RUNPIXI got an onResize callback function.");
 		}else{
 			Rlog("[!ERR] RUNPIXI.setOnResizeFunction needs a function as parameter.");
 		}
@@ -230,6 +230,6 @@ PIXI.RUN = PIXI.initScreen = RUNPIXI.RUN = function(pixicontainerID, mainLoopFun
 	else
 		RUNPIXI.instance.initialize(pixicontainerID);
 	Rlog("");
-	Rlog("╰( ͡° ͜ʖ ͡° )つ──☆.-・°*,.*°☆ Thanks for using RUNPIXI! ☆");
+	Rlog("╰( ͡° ͜ʖ ͡° )つ──☆.-・°*,.*°☆ Thanks for using RUNPIXI!");
 	Rlog("");
 };
