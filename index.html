@@ -20,10 +20,14 @@
 
 	#pixiscreen 
 	{
-		width: 30%;
-		height: 30%;
+		width: 100%;
+		height: 100%;
 		margin: 0 auto;
-		border: 2px solid #FFAA00;
+		/* border: 2px solid #FFAA00; */
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		z-index: -10;
 	}
 	.centered
 	{
@@ -33,9 +37,14 @@
 	</style>
 </head>
 <body>
+<div id="pixiscreen"></div>
+
+<div id="content">
+
 <h1>RUNPIXI.js Documentation</h1>
-	<div id="pixiscreen"></div>
-	<div class="centered">Test Window</div>
+	<br />
+		Do you a see moving background? This is the test window.
+	</br>
 All written by hand, just that you know it.<br />
 <br>
 Fast introduction:<br />
@@ -53,10 +62,76 @@ Fast introduction:<br />
 <br />
 More docs later, see README.txt for further information about version A.
 
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+Yay! You made it.
+
+</div>
+
+<!-- We use jQuery here only for positioning the background. -->
+<script src="extern/jquery.min.js"></script>
 <script src="extern/pixi.min.js"></script>
 <script src="RUNPIXI_B.js"></script>
 <script>
-	PIXI.RUN('pixiscreen', nuff);
+	// move the pixi screen to the scroll position.
+	$(window).scroll(function(){
+		$('#pixiscreen').css('top', $(window).scrollTop());
+	});
+	
+	$(document).ready(function(){
+		// nuff, NUFF, nullFunc are null functions which do nothing and return nothing.
+		PIXI.RUN('pixiscreen', nuff, 0xFFCC33); // Or use 0xRRGGBB for your bg color.
+		//PIXI.PIXELATED(); 	// make it pixel perfect.
+		
+		// load a texture. This should be done by a loader, I just want to show something.
+		PIXI.loader.add("testImage.png").load(setup);
+		
+		// let's do some magic.
+//		PIXI.CreateFullSprite(tex, 10, 10);
+	});
+	
+	function setup()
+	{
+		var he = PIXI.CreateSpriteDefault(PIXI.loader.resources["testImage.png"].texture, 100,100);
+		
+		PIXI.STAGE.addChild(he);
+		RPlog("Setup Done.");
+	}
 </script>
 
 </body>

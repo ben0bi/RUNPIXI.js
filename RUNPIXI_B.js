@@ -1,7 +1,7 @@
-var RUNPIXIVERSION = "0.7.1 (B)"
+var RUNPIXIVERSION = "0.7.2 (B)"
 /*
 	Version B:
-	0.7.1 <= 0.7.0
+	0.7.2 <= 0.7.1 <= 0.7.0
 
 	Successor of Version A: 
 	v0.6.5 (v0.6.4 <= 0.6.3 <= 0.6.2 <= 0.6.1 <= 
@@ -47,7 +47,7 @@ var nullFunc = nuff = NUFF = function() {};
 var isDefined = function(param) {return typeof(param)==="undefined"?false:true;};
 
 // 0.7.1: Rewriteable log function.
-var Rlog = function(txt) {console.log(txt);return txt;}
+var RPlog = function(txt) {console.log(txt);return txt;}
 
 // The runpixi class. It will create a new one with PIXI.RUN, if there is none.
 var RUNPIXI = function()
@@ -55,7 +55,7 @@ var RUNPIXI = function()
 // PRIVATE VARIABLES
 	// The root container of RUNPIXI.
 	var _PIXIRootContainer = new PIXI.Container();	// all other containers are childs 
-							// of the root stage.
+													// of the root stage.	
 	// This function is called after each frame.
 	var _onFrameUpdateFunction = null;
 	// This function is called after a resize.
@@ -72,6 +72,9 @@ var RUNPIXI = function()
 	var _defaultBackgroundColor = 0x1199bb;
 
 // FUNCTIONS
+	// get the stage
+	this.getStage = function() {return _PIXIRootContainer;};
+
 	// get the renderer.
 	this.RENDERER = function() {return _PIXIRenderer;};
 	// get the screen size as object.
@@ -82,9 +85,9 @@ var RUNPIXI = function()
 		if(typeof(m) === 'function')
 		{
 			_onFrameUpdateFunction = m;
-			Rlog("[ OK ] RUNPIXI got an onFrameUpdate callback function.");
+			RPlog("[ OK ] RUNPIXI got an onFrameUpdate callback function.");
 		}else{
-			Rlog("[!ERR] RUNPIXI.setOnFrameUpdateFunction needs a function as parameter.");
+			RPlog("[!ERR] RUNPIXI.setOnFrameUpdateFunction needs a function as parameter.");
 		}	
 	};
 	// set the onResize function.
@@ -93,9 +96,9 @@ var RUNPIXI = function()
 		if(typeof(m) === 'function')
 		{
 			_onResizeFunction = m;
-			Rlog("[ OK ] RUNPIXI got an onResize callback function.");
+			RPlog("[ OK ] RUNPIXI got an onResize callback function.");
 		}else{
-			Rlog("[!ERR] RUNPIXI.setOnResizeFunction needs a function as parameter.");
+			RPlog("[!ERR] RUNPIXI.setOnResizeFunction needs a function as parameter.");
 		}
 	};
 
@@ -120,12 +123,11 @@ var RUNPIXI = function()
 	{
 		if(document.getElementById(pixicontainerID) == null)
 		{
-			Rlog("[!ERR] DOM element for PIXI screen not found. Aborting!");
+			RPlog("[!ERR] DOM element for PIXI screen not found. Aborting!");
 			return;
 		}else{		
-			Rlog("[ OK ] DOM element for PIXI screen found.");
+			RPlog("[ OK ] DOM element for PIXI screen found.");
 		}
-
 
 		// just initialize it once.
 		if(_PIXIDOMScreen == null || _PIXIRenderer == null)
@@ -156,10 +158,10 @@ var RUNPIXI = function()
 			//_PIXIRootStage.addChild(_PIXIHUDStage);
 
 			// start the pixi loop.
-			console.log("[ OK ] PIXI screen initialized. Have Fun!");
+			RPlog("[ OK ] PIXI screen initialized. Have Fun!");
 			_PIXILoopMethod();
 		}else{
-			console.log("[WARN] PIXI screen already initialized.");
+			RPlog("[WARN] PIXI screen already initialized.");
 		}
 	};
 
@@ -171,7 +173,25 @@ var RUNPIXI = function()
 		else
 			return _PIXIInitialize(pixicontainerID, _defaultBackgroundColor);
 	};
+	
+	// create and return a sprite with properties in one line. (0.6.5 => 0.7.2)
+	this.CreateSprite = function(texture, x, y, rotation, anchorx, anchory, scalex,scaley)
+	{
+		var s = new PIXI.Sprite(texture);
+		s.position.x = x;
+		s.position.y = y;
+		s.anchor.x =anchorx;
+		s.anchor.y =anchory;
+		s.rotation =rotation;
+		s.scale.x=scalex;
+		s.scale.y=scaley;
+		return s;
+	};
 
+	// 0.7.2 easy setup of a sprite.
+	this.SimpleSprite = function(texture, x, y)
+	{return this.CreateSprite(texture, x,y,0.0,0.0,0.0,1.0,1.0);}
+	
 	// return the global mouse position.
 	this.GlobalMousePosition = function()
 	{
@@ -204,6 +224,7 @@ if(!isDefined(RUNPIXI.instance))
 	RUNPIXI.instance = nuff;
 }
 
+// 0.7.1 check if PIXI is defined.
 if(!isDefined(PIXI))
 {
 	console.log("[FATALITY] PIXI not loaded. Please load it before RUNPIXI gets loaded.");
@@ -213,9 +234,6 @@ if(!isDefined(PIXI))
 // The default background color.
 PIXI.setDefaultBackgroundColor = RUNPIXI.setDefaultBackgroundColor =  function(hexRGBvalue) 
 {return RUNPIXI.instance.setDefaultBackgroundColor(hexRGBvalue);}
-
-// Helper to create a pixelart screen. (0.6.5 => 0.7.1)
-PIXI.PIXELATED = RUNPIXI.PIXELATED = function() {PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;};
 
 // 0.7.0: Use PIXI directly if possible.
 // Get the renderer
@@ -229,7 +247,17 @@ PIXI.RUN = PIXI.initScreen = RUNPIXI.RUN = function(pixicontainerID, mainLoopFun
 		RUNPIXI.instance.initialize(pixicontainerID, backgroundColor);
 	else
 		RUNPIXI.instance.initialize(pixicontainerID);
-	Rlog("");
-	Rlog("╰( ͡° ͜ʖ ͡° )つ──☆.-・°*,.*°☆ Thanks for using RUNPIXI!");
-	Rlog("");
+	RPlog("");
+	RPlog("╰( ͡° ͜ʖ ͡° )つ──☆.-・°*,.*°☆ Thanks for using RUNPIXI!");
+	RPlog("");
 };
+
+// Helper to create a pixelart screen. (0.6.5 => 0.7.1)
+PIXI.PIXELATED = RUNPIXI.PIXELATED = function(){PIXI.SCALE_MODES.DEFAULT=PIXI.SCALE_MODES.NEAREST;};
+
+// Create a sprite. (0.6.5 => 0.7.2)
+PIXI.CreateSpriteDefault=RUNPIXI.CreateSprite=RUNPIXI.instance.CreateSprite;
+PIXI.CreateSpriteExtended=RUNPIXI.CreateSpriteExtended=RUNPIXI.instance.CreateSpriteExtended;
+
+// 0.7.2 Get the Stage.
+PIXI.STAGE = RUNPIXI.STAGE = RUNPIXI.instance.getStage();
