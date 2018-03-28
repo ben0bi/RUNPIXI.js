@@ -1,10 +1,11 @@
+var RUNPIXIVERSION = "0.7.1 (B)"
 /*
 	Version B:
-	0.7.0
-	
+	0.7.1 <= 0.7.0
+
 	Successor of Version A: 
-	v0.6.5 (v0.6.4 => 0.6.3 => 0.6.2 => 0.6.1 => 
-	0.6.0 => 0.5.0 => 0.4.1 => 0.4.0 => 0.3.5 => ???)
+	v0.6.5 (v0.6.4 <= 0.6.3 <= 0.6.2 <= 0.6.1 <= 
+	0.6.0 <= 0.5.0 <= 0.4.1 <= 0.4.0 <= 0.3.5 <= ???)
 */
 /* Helper to get PIXI.js to run.
 	Needs PIXI.js
@@ -39,25 +40,36 @@
 		</script>
 */
 
+// 0.7.1: Like null, but with typeof==="function"
+var nullFunc = nuff = NUFF = function() {};
+
+// 0.7.1: check if a variable is defined.
+var isDefined = function(param) {return typeof(param)==="undefined"?false:true;};
+
+// 0.7.1: Rewriteable log function.
+var Rlog = function(txt) {console.log(txt);return txt;}
+
 // The runpixi class. It will create a new one with PIXI.RUN, if there is none.
 var RUNPIXI = function()
 {
 // PRIVATE VARIABLES
 	// The root container of RUNPIXI.
 	var _PIXIRootContainer = new PIXI.Container();	// all other containers are childs 
-													// of the root stage.
-
+							// of the root stage.
 	// This function is called after each frame.
 	var _onFrameUpdateFunction = null;
 	// This function is called after a resize.
 	var _onResizeFunction = null;
-	
+
 	// A little dirty ground work.
 	var _PIXIRenderer = null;	// The PIXI renderer.
 
 	var _PIXIDOMScreen = null; 	// ...while not using jquery.
-	var _PIXIWidth = 0;			// width of the PIXI canvas.
+	var _PIXIWidth = 0;		// width of the PIXI canvas.
 	var _PIXIHeight = 0;		// height of the PIXI canvas.
+	
+	// the default background color.
+	var _defaultBackgroundColor = 0x1199bb;
 
 // FUNCTIONS
 	// get the renderer.
@@ -67,19 +79,24 @@ var RUNPIXI = function()
 	// set the onFrameUpdate function.
 	this.setOnFrameUpdateFunction = function(m)
 	{
-		console.log("Setting frameupdatefunc");
 		if(typeof(m) === 'function')
+		{
 			_onFrameUpdateFunction = m;
-		else
-			console.log("ERROR: RUNPIXI.setOnFrameUpdateFunction needs a function as parameter.");
+			Rlog("[ OK ] RUNPIXI got an onFrameUpdateFunction function.");
+		}else{
+			Rlog("[!ERR] RUNPIXI.setOnFrameUpdateFunction needs a function as parameter.");
+		}	
 	};
 	// set the onResize function.
 	this.setOnResizeFunction = function(m)
 	{
 		if(typeof(m) === 'function')
+		{
 			_onResizeFunction = m;
-		else
-			console.log("ERROR: RUNPIXI.setOnResizeFunction needs a function as parameter.");
+			Rlog("[ OK ] RUNPIXI got an onResize function.");
+		}else{
+			Rlog("[!ERR] RUNPIXI.setOnResizeFunction needs a function as parameter.");
+		}
 	};
 
 	// render function.
@@ -103,9 +120,12 @@ var RUNPIXI = function()
 	{
 		if(document.getElementById(pixicontainerID) == null)
 		{
-			console.log("ERROR: DOM element for PIXI screen not found. Aborting!");
+			Rlog("[!ERR] DOM element for PIXI screen not found. Aborting!");
 			return;
+		}else{		
+			Rlog("[ OK ] DOM element for PIXI screen found.");
 		}
+
 
 		// just initialize it once.
 		if(_PIXIDOMScreen == null || _PIXIRenderer == null)
@@ -117,14 +137,15 @@ var RUNPIXI = function()
 
 			// set background color.
 			var transpar = false;
-			var bgcolor = 0x1099bb; // default background color.
+			var bgcolor = 0xFF3333; // absolute default background color, something is wrong when you see this red.
+			// use "transparent" for a transparent screen. (no background color)			
 			if(backgroundColor=="transparent")
 			{
 				bgcolor = 0x000000;
-                transpar = true;
-            }else {
-                bgcolor = backgroundColor;
-            }
+                		transpar = true;
+            		}else {
+		                bgcolor = backgroundColor;
+            		}
 			// create the renderer and add it to the DOM.
 			_PIXIRenderer = PIXI.autoDetectRenderer(_PIXIWidth, _PIXIHeight,{backgroundColor : bgcolor, transparent : transpar});
 			_PIXIDOMScreen.appendChild(_PIXIRenderer.view);
@@ -135,27 +156,28 @@ var RUNPIXI = function()
 			//_PIXIRootStage.addChild(_PIXIHUDStage);
 
 			// start the pixi loop.
+			console.log("[ OK ] PIXI screen initialized. Have Fun!");
 			_PIXILoopMethod();
 		}else{
-			console.log("PIXI Screen already initialized.");
+			console.log("[WARN] PIXI screen already initialized.");
 		}
 	};
-	
+
 	// initialize it with default blue if there is no color given.
 	this.initialize = function(pixicontainerID, backgroundColor) 
 	{
 		if(backgroundColor)
-			_PIXIInitialize(pixicontainerID, backgroundColor);
+			return _PIXIInitialize(pixicontainerID, backgroundColor);
 		else
-			_PIXIInitialize(pixicontainerID, RUNPIXI.defaultBackgroundColor);
+			return _PIXIInitialize(pixicontainerID, _defaultBackgroundColor);
 	};
-	
+
 	// return the global mouse position.
 	this.GlobalMousePosition = function()
 	{
 		if(_PIXIRenderer!=null)
 			return _PIXIRenderer.plugins.interaction.mouse.global;
-        return {'x':0,'y':0};
+        	return {'x':0,'y':0};
 	};
 
 // RESIZE HOOK
@@ -163,7 +185,7 @@ var RUNPIXI = function()
 	window.addEventListener('resize', function(event){
 		if(_PIXIDOMScreen==null || _PIXIRenderer==null)
 			return;
-		
+
 		_PIXIWidth = _PIXIDOMScreen.clientWidth;
 		_PIXIHeight = _PIXIDOMScreen.clientHeight;
 		_PIXIRenderer.resize(_PIXIWidth, _PIXIHeight);
@@ -172,11 +194,28 @@ var RUNPIXI = function()
 	});
 }
 
-// The default background color.
-RUNPIXI.defaultBackgroundColor = 0x1099bb;
+// RUNPIXI Singleton instance. (0.7.1 -> if condition.)
+if(!isDefined(RUNPIXI.instance))
+{
+	RUNPIXI.instance = new RUNPIXI();
+	console.log("[ OK ] RUNPIXI singleton created.");
+}else{
+	console.log("[WARN] No RUNPIXI singleton created. Is it already there?");
+	RUNPIXI.instance = nuff;
+}
 
-// RUNPIXI Singleton instance.
-RUNPIXI.instance = new RUNPIXI();
+if(!isDefined(PIXI))
+{
+	console.log("[FATALITY] PIXI not loaded. Please load it before RUNPIXI gets loaded.");
+	PIXI = nuff;
+}
+
+// The default background color.
+PIXI.setDefaultBackgroundColor = RUNPIXI.setDefaultBackgroundColor =  function(hexRGBvalue) 
+{return RUNPIXI.instance.setDefaultBackgroundColor(hexRGBvalue);}
+
+// Helper to create a pixelart screen. (0.6.5 => 0.7.1)
+PIXI.PIXELATED = RUNPIXI.PIXELATED = function() {PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;};
 
 // 0.7.0: Use PIXI directly if possible.
 // Get the renderer
@@ -185,10 +224,12 @@ PIXI.RunningRenderer = RUNPIXI.RENDERER = RUNPIXI.instance.RENDERER;
 PIXI.getScreenSize = RUNPIXI.getScreenSize = RUNPIXI.instance.getScreenSize;
 PIXI.RUN = PIXI.initScreen = RUNPIXI.RUN = function(pixicontainerID, mainLoopFunction, backgroundColor=null) 
 {
-	console.log("Hello Pixi!");
 	RUNPIXI.instance.setOnFrameUpdateFunction(mainLoopFunction);
 	if(backgroundColor)
 		RUNPIXI.instance.initialize(pixicontainerID, backgroundColor);
 	else
 		RUNPIXI.instance.initialize(pixicontainerID);
+	Rlog("");
+	Rlog("╰( ͡° ͜ʖ ͡° )つ──☆.-・°*,.*°☆ Thanks for using RUNPIXI! ☆");
+	Rlog("");
 };

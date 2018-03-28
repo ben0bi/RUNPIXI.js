@@ -12,10 +12,12 @@
 
 RUNPIXI.js
 
-Version B. Working on it.
-Checkout the branch "Version_A" for the old, stable version.
-
 A library to get PIXI.js to run with ease.
+
+Version B. Working on it.
+Checkout the branch "Version_A" for the old, bloaty but stable version.
+
++  Controller support will be added in the B version.
 
 By Beni Yager @ 2016, 2017, 2018
 
@@ -24,6 +26,10 @@ http://www.pixijs.com/
 
 (MAIN-)USAGE:
 -------------
+++ Opens a PIXI-Screen in the given div and uses your 
+	loop function for game logic.
+++ Resizes automagically all your stuff when the 
+	window is resized.
 
 Create a div with a given size and give it an id:
 

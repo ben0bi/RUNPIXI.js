@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RUNPIXI.js Documentation (Version B)</title>
+	<meta charset="UTF-8" />
+	<style>
+	html, body, #wrapper
+	{
+		width: 100%;
+		height: 100%;
+		min-height: 100%;
+		padding: 0;
+		margin: 0;
+	}
+	
+	#wrapper
+	{
+		border: 2px solid #0033FF;
+	}
+
+	#pixiscreen 
+	{
+		width: 30%;
+		height: 30%;
+		margin: 0 auto;
+		border: 2px solid #FFAA00;
+	}
+	.centered
+	{
+		margin: 0 auto;
+		text-align: center;
+	}
+	</style>
+</head>
+<body>
+<h1>RUNPIXI.js Documentation</h1>
+	<div id="pixiscreen"></div>
+	<div class="centered">Test Window</div>
+All written by hand, just that you know it.<br />
+<br>
+Fast introduction:<br />
+* Create a div with an id (here: pixiscreen) with a given (fixed) width and height,<br />
+* include the source files with the <a href="http://github.com/ben0bi/ben0biJSLoader">ben0biJSLoader (github)</a> or directly in the html file:<br />
+<br />
+** pixi.js from <a href="http://pixijs.com">pixijs.com</a>,<br />
+** then RUNPIXI.js or RUNPIXI_B.js,<br />
+<br />
+* create a loop function or use NUFF for your game logic (in a &ltscript&gt;):<br />
+<br />
+* then call <i>PIXI.RUN("pixiscreen", loop);</i> and look what the console gives you.<br />
+<br />
+* after that, call PIXI.PIXELATED(); for a pixel-perfect view for your pixel-perfect game. :)<br />
+<br />
+More docs later, see README.txt for further information about version A.
+
+<script src="extern/pixi.min.js"></script>
+<script src="RUNPIXI_B.js"></script>
+<script>
+	PIXI.RUN('pixiscreen', nuff);
+</script>
+
+</body>
+</html>
